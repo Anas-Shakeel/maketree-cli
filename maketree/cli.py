@@ -36,6 +36,10 @@ def main():
         print("destination path '%s' is not a directory." % dstpath)
         sys.exit(1)
 
+    # Send file to parser
+    parsed_tree = Parser.parse_file(sourcefile)
+    print(parsed_tree)
+
 
 def parse_args():
     """Parse command-line arguments and return."""
