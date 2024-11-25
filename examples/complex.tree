@@ -1,0 +1,29 @@
+root/
+    level1_dir/
+        level2_dir/
+            level3_dir/
+                level4_dir/
+                    file1.txt
+                    file2.log
+                level4_empty_dir/
+            level3_sibling_dir/
+                level4_nested_dir/
+                    deeply_nested_file.md
+        level2_sibling_dir/
+            file_at_level2.txt
+    level1_empty_dir/
+    level1_mixed/
+        file_in_mixed1.py
+        file_in_mixed2.js
+        mixed_subdir/
+            mixed_nested_file.json
+    top_level_file1.txt
+    top_level_file2.txt
+another_root/
+    sub_dir1/
+        sub_sub_dir/
+            sub_file1.txt
+            sub_file2.txt
+    sub_dir2/
+        file_in_sub_dir2.py
+    another_top_file.cpp

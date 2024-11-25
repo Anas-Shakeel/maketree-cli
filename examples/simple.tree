@@ -1,0 +1,10 @@
+src/
+    __init__.py
+    cli.py
+    utils.py
+docs/
+    user-guide.md
+    dev-guide.md
+LICENSE
+README.md
+requirements.txt
