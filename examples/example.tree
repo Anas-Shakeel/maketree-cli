@@ -1,0 +1,15 @@
+root/
+    frontend/
+        file.html
+        file.css
+        file.js
+    backend/
+        views.py
+        models.py
+        db.py
+    docs/
+        index.md
+        dev-guides.md
+    README.md
+    requirements.txt
+    setup.py
