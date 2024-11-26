@@ -1,9 +1,10 @@
 """ Frontend of the project (Argument handling and stuff) """
 
 import sys
+from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser
-from pathlib import Path
+from maketree.core.validator import Validator
 
 
 PROGRAM = "maketree"
@@ -38,6 +39,13 @@ def main():
 
     # Send file to parser
     parsed_tree = Parser.parse_file(sourcefile)
+
+    # Validate the tree
+    valid = Validator.validate(parsed_tree)
+    if isinstance(valid, str):  # Errrrr
+        print(valid)
+        sys.exit(1)
+
     print(parsed_tree)
 
 
