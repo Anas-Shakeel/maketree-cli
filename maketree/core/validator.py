@@ -1,6 +1,6 @@
 """ Responsible for validating the structure file and ensuring that the defined directory structure is correct and usable. """
 
-from pathlib import Path
+from platform import system
 from os.path import splitext
 from typing import List, Dict, Union
 
@@ -8,10 +8,32 @@ from typing import List, Dict, Union
 class Validator:
     """Validator base class to validate parsed tree."""
 
+    # Windows, Darwin, Linux
+    OS: str = system()
+
     @classmethod
     def validate(cls, tree: List[Dict]):
         """Validate the tree. Returns `True` if valid, Returns `str` (an err message) for otherwise."""
-        pass
+        for entry in tree:
+            if entry["type"] == "directory":
+                # Validate dir
+                valid = cls.is_valid_dir(entry["name"])
+                if valid is not True:
+                    return "%s: %s" % (entry["name"], valid)
+
+                # Got children?
+                if entry["children"]:
+                    # Recurse
+                    valid = cls.validate(entry["children"])
+                    if valid is not True:
+                        return valid
+
+            else:  # File
+                valid = cls.is_valid_file(entry["name"])
+                if valid is not True:
+                    return "%s: %s" % (entry["name"], valid)
+
+        return True
 
     @classmethod
     def is_valid_extension(cls, extension: str) -> bool:
@@ -21,23 +43,12 @@ class Validator:
         `extension` must contain a period `.`
 
         An extension is valid if it follows below criteria:
-        - extension must be non-empty
+        - extension must be non-empty (excluding period `.`)
         - extension must have a period `.`
         - extension must not contain symbols, whitespaces
             - `\\/:*?"<>|` are illegal on Windows
             - `/:` are illegal on Mac
             - `/` are illegal on Linux
-        - extension must have atleast one character (excluding period)
-
-        #### Example:
-        ```
-        >> pins.is_valid_extension(".txt")
-        True
-        >> pins.is_valid_extension(".")
-        False
-        >> pins.is_valid_extension("txt")
-        False
-        ```
         """
         if not extension:
             return False
@@ -52,117 +63,85 @@ class Validator:
             return False
 
         if cls.OS == "Windows":
-            if " " in extension:
+            # Got Illegals?
+            if cls._contains(extension, r' \/:*?"<>|'):
                 return False
 
-            for char in r'\/:*?"<>|':
-                if char in extension:
-                    return False
-        elif cls.OS == "Darwin" and ("/" in extension or ":" in extension):
+        elif cls.OS == "Darwin" and cls._contains(extension, "/:"):
             return False
+
         elif cls.OS == "Linux" and "/" in extension:
             return False
 
         return True
 
     @classmethod
-    def is_valid_filepath(
-        cls, filepath: str, extension="*", max_length: int = 250
-    ) -> Union[bool, str]:
+    def is_valid_file(cls, filename: str) -> Union[bool, str]:
         """
-        ### Is Valid Filepath
-        Validates filepath. Returns `True` if valid, Returns `str` if invalid.
-        This `str` contains the reason for path being invalid.
+        ### Is Valid File
+        Validates filename. Returns `True` if valid, Returns `str` if invalid.
+        This `str` is the cause of filename invalidation.
 
         #### ARGS:
-        - `filepath`: the filepath string to validate
-        - `extension`: the extension to match
-            - `.py`: accept only .py files (any extension can be provided)
-            - `*`: accept any extension
-            - `None`: accept any extension (but not required!)
-        - `max_length`: maximum length of the path (excluding extension, slashes and drive letter)
-
-        #### Example:
-        ```
-        >> is_valid_filepath("path\\to\\fock.txt")
-        True
-        >> is_valid_filepath("path\\to\\f**k.txt")
-        'Illegal characters are not allowed: \\/:?*<>|"'
-        ```
+        - `filename`: name of the file
         """
-        if not filepath:
-            return "Path must not be empty."
+        if not filename:
+            return "file name must not be empty"
 
         # Split filepath into root and extension
-        root, ext_ = splitext(filepath)
+        root, ext_ = splitext(filename)
 
-        # # Root must not be empty
+        # Root must not be empty
         if not root:
-            return "Invalid filepath."
+            return "invalid file name"
 
-        dir_is_valid = cls.is_valid_dirpath(root, max_length)
-        if dir_is_valid != True:
-            return dir_is_valid
+        # TODO: Check for illegal chars here....
+        if cls.OS == "Windows":
+            if cls._contains(root, r'\/:?*<>"|'):
+                return """illegal characters are not allowed: '\\/:?*<>|"'"""
+        elif cls.OS == "Darwin":
+            if cls._contains(root, r"/:<>"):
+                return """illegal characters are not allowed: '/:?<>'"""
+        else:  # Linux
+            if cls._contains(root, r"/:<>"):
+                return "illegal characters are not allowed: '/:?<>'"
 
-        # Extension Validation
-        if isinstance(extension, str):
-            if len(ext_) < 2:
-                return "Filepath is missing an extension."
-            if extension != "*" and ext_.lower() != extension.lower():
-                return f"Only '{extension}' files are allowed."
-            elif extension == "*" and not cls.is_valid_extension(ext_):
-                return f"Invalid extension: '{ext_}'"
-        else:
-            if ext_ and not cls.is_valid_extension(ext_):
-                return f"Invalid extension: '{ext_}'"
+        if ext_ and not cls.is_valid_extension(ext_):
+            return "invalid file extension"
 
         return True
 
     @classmethod
-    def is_valid_dirpath(cls, dirpath: str, max_length: int = 250):
+    def is_valid_dir(cls, dirname: str) -> Union[bool, str]:
         """
         ### Is Valid Dirpath
-        Validates directory path. Returns `True` if valid, Returns `str` if invalid.
-        This `str` contains the reason for path being invalid.
+        Validates directory name. Returns `True` if valid, Returns `str` if invalid.
+        This `str` contains the reason for dir being invalid.
 
         #### ARGS:
-        - `dirpath`: the path to validate
-        - `max_length`: maximum length to allow (length of the whole path, except drive)
-
-        #### Example:
-        ```
-        >> is_valid_dirpath("path\\to\\folder")
-        True
-        >> is_valid_dirpath("path\\to\\*Illegal*folder")
-        'Illegal characters are not allowed: \\/:?*<>|"'
-        ```
-
-        Raises `AssertionError` if:
-        - `dirpath` is not a string
+        - `dirname`: the path to validate
         """
-        if not dirpath:
-            return "Path must not be empty."
-
-        d = Path(dirpath)
-        if d.drive:
-            root_parts = d.parts[1:]
-        elif cls.OS == "Linux" and d.parts[0] == "/":
-            root_parts = d.parts[1:]
-        else:
-            root_parts = d.parts
-
-        if sum(len(part) for part in root_parts) > max_length:
-            return f"Maximum length of path can be {max_length} (excluding slashes and drive)"
+        if not dirname:
+            return "directory must not be empty."
 
         # Check for illegal chars
         if cls.OS == "Windows":
-            if cls._contains(root_parts, r'\/:?*<>"|'):
-                return """Illegal characters are not allowed: '\\/:?*<>|"'"""
+            if cls._contains(dirname, r'\/:?*<>"|'):
+                return """illegal characters are not allowed: '\\/:?*<>|"'"""
         elif cls.OS == "Darwin":
-            if cls._contains(root_parts, r"/:<>"):
-                return """Illegal characters are not allowed: '/:?<>'"""
+            if cls._contains(dirname, r"/:<>"):
+                return """illegal characters are not allowed: '/:?<>'"""
         else:
-            if cls._contains(root_parts, r"/:<>"):
-                return "Illegal characters are not allowed: '/:?<>'"
+            if cls._contains(dirname, r"/:<>"):
+                return "illegal characters are not allowed: '/:?<>'"
 
         return True
+
+    @classmethod
+    def _contains(cls, part: str, chars: str) -> bool:
+        """
+        ### Contains
+        Checks whether `part` contains a character from `chars`.
+        Returns `True` if it does, `False` if does not.
+        """
+        return any(char for char in chars if char in part)
