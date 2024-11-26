@@ -19,23 +19,19 @@ def main():
 
     # SRC Exists?
     if not sourcefile.exists():
-        print("source '%s' does not exist." % sourcefile)
-        sys.exit(1)
+        error("source '%s' does not exist." % sourcefile)
 
     # SRC Tree file?
     if not sourcefile.name.endswith(".tree"):
-        print("source '%s' is not a .tree file." % sourcefile)
-        sys.exit(1)
+        error("source '%s' is not a .tree file." % sourcefile)
 
     # DST Exists?
     if not dstpath.exists():
-        print("destination path '%s' does not exist." % dstpath)
-        sys.exit(1)
+        error("destination path '%s' does not exist." % dstpath)
 
     # DST not a Dir?
     if not dstpath.is_dir():
-        print("destination path '%s' is not a directory." % dstpath)
-        sys.exit(1)
+        error("destination path '%s' is not a directory." % dstpath)
 
     # Send file to parser
     parsed_tree = Parser.parse_file(sourcefile)
@@ -70,3 +66,9 @@ def parse_args():
     )
 
     return parser.parse_args()
+
+
+def error(message: str):
+    """Print `message` and exit with status `1`. Use upon errors only."""
+    print(message)
+    sys.exit(1)
