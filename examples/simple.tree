@@ -1,7 +1,6 @@
 assets/
     logo.svg
-    image1.png
-    image2.jpg
+    image.png
     font.ttf
 src/
     index.html
