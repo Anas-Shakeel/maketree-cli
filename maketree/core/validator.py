@@ -21,9 +21,10 @@ class Validator:
     def validate(cls, tree: List[Dict]):
         """Validate the tree. Returns `True` if valid, Returns `str` (an err message) for otherwise."""
         # Check for Name validation
-        valid = cls.validate_tree(tree)
-        if valid is not True:
-            return valid
+        try:
+            cls.validate_tree(tree)
+        except ValidationError as e:
+            return str(e)
 
         # Check for duplications
         try:
@@ -49,7 +50,7 @@ class Validator:
                 # Already in set?
                 if name in seen_names:
                     raise ValidationError(
-                        f"Conflict: Name '{name}' already exists in {'/'.join(path)}"
+                        f"Name '{name}' already exists in {'/'.join(path)}"
                     )
 
                 # Add in set
@@ -73,12 +74,13 @@ class Validator:
 
     @classmethod
     def validate_tree(cls, tree: List[Dict]):
+        """Validates the whole parsed tree for valid dir and file names."""
         for entry in tree:
             if entry["type"] == "directory":
                 # Validate dir
                 valid = cls.is_valid_dir(entry["name"])
                 if valid is not True:
-                    return "%s: %s" % (entry["name"], valid)
+                    raise ValidationError(valid)
 
                 # Got children?
                 if entry["children"]:
@@ -90,7 +92,7 @@ class Validator:
             else:  # File
                 valid = cls.is_valid_file(entry["name"])
                 if valid is not True:
-                    return "%s: %s" % (entry["name"], valid)
+                    raise ValidationError("%s: %s" % (entry["name"], valid))
 
         return True
 
