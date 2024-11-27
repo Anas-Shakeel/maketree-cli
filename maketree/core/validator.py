@@ -14,6 +14,10 @@ class Validator:
     @classmethod
     def validate(cls, tree: List[Dict]):
         """Validate the tree. Returns `True` if valid, Returns `str` (an err message) for otherwise."""
+        return cls._validate_tree(tree)
+
+    @classmethod
+    def _validate_tree(cls, tree: List[Dict]):
         for entry in tree:
             if entry["type"] == "directory":
                 # Validate dir
