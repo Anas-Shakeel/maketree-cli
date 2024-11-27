@@ -1,7 +1,14 @@
 """  Responsible for reading and parsing the structure file (in `.tree` format),
 that users provide to define the directory structure. """
 
+from maketree.core.validator import Validator
 from typing import List
+
+
+class ParseError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+        self.args = args
 
 
 class Parser:
@@ -21,7 +28,7 @@ class Parser:
         stack = []  # Keep track of parent dirs
         tree = []  # Final parsed tree (list of dicts)
 
-        for line in lines:
+        for i, line in enumerate(lines):
             line = line.rstrip()
 
             # Empty line?
@@ -37,6 +44,13 @@ class Parser:
                     "name": line.strip().rstrip("/"),
                     "children": [],
                 }
+
+                # Validate dir name
+                valid = Validator.is_valid_dir(item["name"])
+                if valid is not True:
+                    raise ParseError(
+                        "at line %d, in '%s', %s" % (i + 1, item["name"], valid)
+                    )
 
                 # Pop from stack til the correct parent
                 while stack and stack[-1]["indent_level"] >= indent_level:
@@ -54,6 +68,13 @@ class Parser:
 
             else:  # Its a File
                 item = {"type": "file", "name": line.strip()}
+
+                # Validate file name
+                valid = Validator.is_valid_file(item["name"])
+                if valid is not True:
+                    raise ParseError(
+                        "at line %d, in '%s', %s" % (i + 1, item["name"], valid)
+                    )
 
                 # Pop from stack til the correct parent
                 while stack and stack[-1]["indent_level"] >= indent_level:
