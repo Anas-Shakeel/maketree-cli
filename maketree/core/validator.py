@@ -18,22 +18,6 @@ class Validator:
     OS: str = system()
 
     @classmethod
-    def check_duplicates(cls, paths: List[str]) -> Union[bool, str]:
-        """Check for duplicate paths in the tree. Raises `ValidationError` if duplicates found."""
-        # Holds Already seen paths
-        seen_paths = set()
-
-        # Iterate through paths
-        for path in paths:
-            # Familiar path?
-            if path in seen_paths:
-                return path
-
-            seen_paths.add(path)
-
-        return True
-
-    @classmethod
     def paths_exist(cls, paths: List[str]) -> List:
         """
         Check if a path (`file` or `dir`) in `paths` already exists.
