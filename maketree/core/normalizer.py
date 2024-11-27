@@ -1,32 +1,35 @@
 """ Normalizes the parsed tree and creates paths. """
 
 from os.path import join as join_path
-from typing import List, Dict, Set
+from typing import List, Dict
 
 
 class Normalizer:
 
     @classmethod
-    def normalize(cls, tree: List[Dict]) -> Dict[str, Set[str]]:
+    def normalize(cls, tree: List[Dict]) -> Dict[str, List[str]]:
         """
         Normalizes tree as paths and remove any duplicate paths.
-        Returns a dictionary of Two Sets containing file and dir paths.
+        Returns a dictionary of Two Lists containing file and dir paths.
 
         ```
         # Output Dict
         {
-            "directories": {'./src', './docs'}
-            "files": {
-                'index.html',
-                'styles.css',
-                'user-guide.md',
-                'dev-guide.md'
-            }
+            "directories": ['./src', './assets']
+            "files": [
+                './assets/logo.svg',
+                './assets/image.png',
+                './assets/font.ttf',
+                './src/index.html',
+                './src/styles.css',
+                './user-guide.md',
+                './dev-guide.md',
+            ]
         }
         ```
         """
-        dirs = set()  # Holds normalized dirs
-        files = set()  # Holds normalized files
+        dirs = []  # Holds normalized dirs
+        files = []  # Holds normalized files
 
         def traverse(node: Dict, path: List):
             for child in node.get("children", []):
@@ -34,12 +37,15 @@ class Normalizer:
                 str_path = join_path(*path, name)
 
                 if child["type"] == "directory":
-                    dirs.add(str_path)
+                    # Add if not already
+                    if str_path not in dirs:
+                        dirs.append(str_path)
                     # Got Children?
                     if child["children"]:
                         traverse(child, path + [name])
                 else:  # File
-                    files.add(str_path)
+                    if str_path not in files:
+                        files.append(str_path)
 
         traverse(
             node={
