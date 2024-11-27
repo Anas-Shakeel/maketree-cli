@@ -18,74 +18,33 @@ class Validator:
     OS: str = system()
 
     @classmethod
-    def validate(cls, paths: Dict[str, List[str]]) -> Union[bool, str]:
-        """
-        Validate the paths from normalizer.
-        Returns `True` if valid, Returns `str` (an err message) for otherwise.
+    def check_duplicates(cls, paths: List[str]) -> Union[bool, str]:
+        """Check for duplicate paths in the tree. Raises `ValidationError` if duplicates found."""
+        # Holds Already seen paths
+        seen_paths = set()
 
-        It makes sure that:
-        - Directories or Files do not already exist
-        - There are no duplicate paths
-        - There will be no conflicts when creating dirs/files
-        """
-        # Check for existing dirs
-        directory = cls.paths_exist(paths["directories"])
-        if directory is not True:
-            return "Directory '%s' already exists" % directory
-
-        # Check for existing files
-        file = cls.paths_exist(paths["files"])
-        if file is not True:
-            return "File '%s' already exists" % file
-
-    @classmethod
-    def check_duplicates(cls, tree: List[Dict]):
-        """Check for duplicate entries in the tree. Raises `ValidationError` if duplicates found."""
-
-        def traverse(node: Dict, path: List):
-            # Keeps track of seen names in current dir
-            seen_names = set()
-
-            # Iterate through node's children
-            for child in node.get("children", []):
-                name = child["name"]
-
-                # Already in set?
-                if name in seen_names:
-                    raise ValidationError(
-                        f"Name '{name}' already exists in {'/'.join(path)}"
-                    )
-
-                # Add in set
-                seen_names.add(name)
-
-                # Child a Directory? Recurse
-                if child["type"] == "directory":
-                    traverse(child, path + [name])
-
-        # Treat tree as a directory.
-        traverse(
-            node={
-                "type": "directory",
-                "name": ".",
-                "children": tree,
-            },
-            path=["."],
-        )
-
-        return True
-
-    @classmethod
-    def paths_exist(cls, paths: List[str]) -> Union[bool, str]:
-        """
-        Check if a path (`file` or `dir`) in `paths` already exists.
-        Returns `True` if no paths already exist, Returns the `path` itself, if it exists.
-        """
+        # Iterate through paths
         for path in paths:
-            if exists(path):
+            # Familiar path?
+            if path in seen_paths:
                 return path
 
+            seen_paths.add(path)
+
         return True
+
+    @classmethod
+    def paths_exist(cls, paths: List[str]) -> List:
+        """
+        Check if a path (`file` or `dir`) in `paths` already exists.
+        Returns `list` of all paths that do exist, or empty list if none do.
+        """
+        existants = []
+        for path in paths:
+            if exists(path):
+                existants.append(path)
+
+        return existants
 
     @classmethod
     def is_valid_extension(cls, extension: str) -> bool:
