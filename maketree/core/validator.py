@@ -5,6 +5,12 @@ from os.path import splitext
 from typing import List, Dict, Union
 
 
+class ValidationError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+        self.args = args
+
+
 class Validator:
     """Validator base class to validate parsed tree."""
 
@@ -14,7 +20,56 @@ class Validator:
     @classmethod
     def validate(cls, tree: List[Dict]):
         """Validate the tree. Returns `True` if valid, Returns `str` (an err message) for otherwise."""
-        return cls._validate_tree(tree)
+        # Check for Name validation
+        valid = cls._validate_tree(tree)
+        if valid is not True:
+            return valid
+
+        # Check for duplications
+        try:
+            cls.check_duplicates(tree)
+        except ValidationError as e:
+            return str(e)
+
+        # If reached this far, everythings good.
+        return True
+
+    @classmethod
+    def check_duplicates(cls, tree: List[Dict]):
+        """Check for duplicate entries in the tree. Raises `ValidationError` if duplicates found."""
+
+        def traverse(node: Dict, path: List):
+            # Keeps track of seen names in current dir
+            seen_names = set()
+
+            # Iterate through node's children
+            for child in node.get("children", []):
+                name = child["name"]
+
+                # Already in set?
+                if name in seen_names:
+                    raise ValidationError(
+                        f"Conflict: Name '{name}' already exists in {'/'.join(path)}"
+                    )
+
+                # Add in set
+                seen_names.add(name)
+
+                # Child a Directory? Recurse
+                if child["type"] == "directory":
+                    traverse(child, path + [name])
+
+        # Treat tree as a directory.
+        traverse(
+            node={
+                "type": "directory",
+                "name": ".",
+                "children": tree,
+            },
+            path=["."],
+        )
+
+        return True
 
     @classmethod
     def _validate_tree(cls, tree: List[Dict]):
@@ -28,7 +83,7 @@ class Validator:
                 # Got children?
                 if entry["children"]:
                     # Recurse
-                    valid = cls.validate(entry["children"])
+                    valid = cls._validate_tree(entry["children"])
                     if valid is not True:
                         return valid
 
