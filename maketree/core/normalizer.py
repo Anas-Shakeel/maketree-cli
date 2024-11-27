@@ -7,7 +7,7 @@ from typing import List, Dict
 class Normalizer:
 
     @classmethod
-    def normalize(cls, tree: List[Dict]) -> Dict[str, List[str]]:
+    def normalize(cls, tree: List[Dict], rootpath: str = ".") -> Dict[str, List[str]]:
         """
         Normalizes tree as paths and remove any duplicate paths.
         Returns a dictionary of Two Lists containing file and dir paths.
@@ -50,10 +50,10 @@ class Normalizer:
         traverse(
             node={
                 "type": "directory",
-                "name": ".",
+                "name": rootpath,
                 "children": tree,
             },
-            path=["."],
+            path=[rootpath],
         )
 
         # Return as a dictionary
