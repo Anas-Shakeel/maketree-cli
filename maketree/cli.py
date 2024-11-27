@@ -5,6 +5,9 @@ from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
 from maketree.core.validator import Validator, ValidationError
+from maketree.core.tree_builder import TreeBuilder
+from maketree.core.normalizer import Normalizer
+from typing import List, Dict
 
 
 PROGRAM = "maketree"
@@ -39,11 +42,12 @@ def main():
     except ParseError as e:
         error(e)
 
-    # Check if any files already exist.
-    try:
-        Validator.check_if_files_exist(parsed_tree)
-    except ValidationError as e:
-        error(e)
+    # Create paths from tree nodes
+    paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree)
+
+    # Further validate paths
+    if issues := validate(paths):
+        error(f"\nFix {issues} issue{'s' if issues > 1 else ''} before moving forward.")
 
 
 def parse_args():
@@ -73,3 +77,32 @@ def error(message: str):
     """Print `message` and exit with status `1`. Use upon errors only."""
     print(message)
     sys.exit(1)
+
+
+def validate(paths: Dict[str, List[str]]) -> int:
+    """
+    Further validate the normalized paths.
+    Returns the number of issues. `0` is safe to continue.
+    """
+    # Number of issues found
+    issue_count = 0
+
+    # Check for existing paths
+    directories = Validator.paths_exist(paths["directories"])
+    files = Validator.paths_exist(paths["files"])
+
+    # Print existing dirs
+    if directories:
+        for path in directories:
+            print("Warning: Directory '%s' already exists." % path)
+
+    # Print existing files
+    if files:
+        for path in files:
+            print("Warning: File '%s' already exists." % path)
+
+    # Update issues, if any
+    issue_count = len(directories) + len(files)
+
+    # Return no. of issues found
+    return issue_count
