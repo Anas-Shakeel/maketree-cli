@@ -1,10 +1,11 @@
+assets/
+    logo.svg
+    image1.png
+    image2.jpg
+    font.ttf
 src/
-    __init__.py
-    cli.py
-    utils.py
-docs/
-    user-guide.md
-    dev-guide.md
-LICENSE
-README.md
-requirements.txt
+    index.html
+    styles.css
+    styles.css
+user-guide.md
+dev-guide.md
