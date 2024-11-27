@@ -1,7 +1,7 @@
 """ Responsible for validating the structure file and ensuring that the defined directory structure is correct and usable. """
 
 from platform import system
-from os.path import splitext, isfile, isdir
+from os.path import splitext, isfile, isdir, exists
 from typing import List, Dict, Union
 
 
@@ -18,22 +18,18 @@ class Validator:
     OS: str = system()
 
     @classmethod
-    def validate(cls, tree: List[Dict]):
-        """Validate the tree. Returns `True` if valid, Returns `str` (an err message) for otherwise."""
-        # Check for Name validation
-        try:
-            cls.validate_tree(tree)
-        except ValidationError as e:
-            return str(e)
+    def validate(cls, paths: Dict[str, List[str]]):
+        """
+        Validate the paths from normalizer.
+        Returns `True` if valid, Returns `str` (an err message) for otherwise.
 
-        # Check for duplications
-        try:
-            cls.check_duplicates(tree)
-        except ValidationError as e:
-            return str(e)
-
-        # If reached this far, everythings good.
-        return True
+        It makes sure that:
+        - Files do not already exist
+        - There are no duplicate paths
+        - There will be no conflicts when creating dirs/files
+        """
+        # Check for existing files
+        exist = cls.paths_exist(paths["files"])
 
     @classmethod
     def check_duplicates(cls, tree: List[Dict]):
@@ -73,25 +69,16 @@ class Validator:
         return True
 
     @classmethod
-    def check_if_files_exist(cls, tree: List[Dict]):
-        """Traverse the tree and check if a file in tree already exists.
-        If it does, Raise a `ValidationError`"""
+    def paths_exist(cls, paths: List[str]):
+        """
+        Check if a path (`file` or `dir`) in `paths` already exists.
+        Returns `True` if none exist, `str` if a path does exist. _(str contains a message)_
+        """
+        for path in paths:
+            if exists(path):
+                return "File '%s' already exists"
 
-        def traverse(node, path):
-            # Iterate through node's children
-            for child in node.get("children", []):
-                name = child["name"]
-                str_path = "/".join(path) + "/" + name
-
-                # Is child a directory?
-                if child["type"] == "directory":
-                    traverse(child, path + [name])
-                else:  # File
-                    if isfile(str_path):
-                        raise ValidationError("File '%s' already exists" % str_path)
-
-        # Treat tree as a '.' directory
-        traverse({"type": "directory", "name": ".", "children": tree}, path=["."])
+        return True
 
     @classmethod
     def validate_tree(cls, tree: List[Dict]):
