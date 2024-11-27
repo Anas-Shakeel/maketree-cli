@@ -64,10 +64,10 @@ class Validator:
 
         if cls.OS == "Windows":
             # Got Illegals?
-            if cls._contains(extension, r' \/:*?"<>|'):
+            if cls._contains_chars(extension, r' \/:*?"<>|'):
                 return False
 
-        elif cls.OS == "Darwin" and cls._contains(extension, "/:"):
+        elif cls.OS == "Darwin" and cls._contains_chars(extension, "/:"):
             return False
 
         elif cls.OS == "Linux" and "/" in extension:
@@ -97,13 +97,13 @@ class Validator:
 
         # TODO: Check for illegal chars here....
         if cls.OS == "Windows":
-            if cls._contains(root, r'\/:?*<>"|'):
+            if cls._contains_chars(root, r'\/:?*<>"|'):
                 return """illegal characters are not allowed: '\\/:?*<>|"'"""
         elif cls.OS == "Darwin":
-            if cls._contains(root, r"/:<>"):
+            if cls._contains_chars(root, r"/:<>"):
                 return """illegal characters are not allowed: '/:?<>'"""
         else:  # Linux
-            if cls._contains(root, r"/:<>"):
+            if cls._contains_chars(root, r"/:<>"):
                 return "illegal characters are not allowed: '/:?<>'"
 
         if ext_ and not cls.is_valid_extension(ext_):
@@ -126,22 +126,22 @@ class Validator:
 
         # Check for illegal chars
         if cls.OS == "Windows":
-            if cls._contains(dirname, r'\/:?*<>"|'):
+            if cls._contains_chars(dirname, r'\/:?*<>"|'):
                 return """illegal characters are not allowed: '\\/:?*<>|"'"""
         elif cls.OS == "Darwin":
-            if cls._contains(dirname, r"/:<>"):
+            if cls._contains_chars(dirname, r"/:<>"):
                 return """illegal characters are not allowed: '/:?<>'"""
         else:
-            if cls._contains(dirname, r"/:<>"):
+            if cls._contains_chars(dirname, r"/:<>"):
                 return "illegal characters are not allowed: '/:?<>'"
 
         return True
 
     @classmethod
-    def _contains(cls, part: str, chars: str) -> bool:
+    def _contains_chars(cls, string: str, chars: str) -> bool:
         """
         ### Contains
-        Checks whether `part` contains a character from `chars`.
+        Checks whether `string` contains a character from `chars`.
         Returns `True` if it does, `False` if does not.
         """
-        return any(char for char in chars if char in part)
+        return any(char for char in chars if char in string)
