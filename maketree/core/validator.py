@@ -21,7 +21,7 @@ class Validator:
     def validate(cls, tree: List[Dict]):
         """Validate the tree. Returns `True` if valid, Returns `str` (an err message) for otherwise."""
         # Check for Name validation
-        valid = cls._validate_tree(tree)
+        valid = cls.validate_tree(tree)
         if valid is not True:
             return valid
 
@@ -72,7 +72,7 @@ class Validator:
         return True
 
     @classmethod
-    def _validate_tree(cls, tree: List[Dict]):
+    def validate_tree(cls, tree: List[Dict]):
         for entry in tree:
             if entry["type"] == "directory":
                 # Validate dir
@@ -83,7 +83,7 @@ class Validator:
                 # Got children?
                 if entry["children"]:
                     # Recurse
-                    valid = cls._validate_tree(entry["children"])
+                    valid = cls.validate_tree(entry["children"])
                     if valid is not True:
                         return valid
 
@@ -123,10 +123,10 @@ class Validator:
 
         if cls.OS == "Windows":
             # Got Illegals?
-            if cls._contains_chars(extension, r' \/:*?"<>|'):
+            if cls.contains_chars(extension, r' \/:*?"<>|'):
                 return False
 
-        elif cls.OS == "Darwin" and cls._contains_chars(extension, "/:"):
+        elif cls.OS == "Darwin" and cls.contains_chars(extension, "/:"):
             return False
 
         elif cls.OS == "Linux" and "/" in extension:
@@ -156,13 +156,13 @@ class Validator:
 
         # TODO: Check for illegal chars here....
         if cls.OS == "Windows":
-            if cls._contains_chars(root, r'\/:?*<>"|'):
+            if cls.contains_chars(root, r'\/:?*<>"|'):
                 return """illegal characters are not allowed: '\\/:?*<>|"'"""
         elif cls.OS == "Darwin":
-            if cls._contains_chars(root, r"/:<>"):
+            if cls.contains_chars(root, r"/:<>"):
                 return """illegal characters are not allowed: '/:?<>'"""
         else:  # Linux
-            if cls._contains_chars(root, r"/:<>"):
+            if cls.contains_chars(root, r"/:<>"):
                 return "illegal characters are not allowed: '/:?<>'"
 
         if ext_ and not cls.is_valid_extension(ext_):
@@ -185,19 +185,19 @@ class Validator:
 
         # Check for illegal chars
         if cls.OS == "Windows":
-            if cls._contains_chars(dirname, r'\/:?*<>"|'):
+            if cls.contains_chars(dirname, r'\/:?*<>"|'):
                 return """illegal characters are not allowed: '\\/:?*<>|"'"""
         elif cls.OS == "Darwin":
-            if cls._contains_chars(dirname, r"/:<>"):
+            if cls.contains_chars(dirname, r"/:<>"):
                 return """illegal characters are not allowed: '/:?<>'"""
         else:
-            if cls._contains_chars(dirname, r"/:<>"):
+            if cls.contains_chars(dirname, r"/:<>"):
                 return "illegal characters are not allowed: '/:?<>'"
 
         return True
 
     @classmethod
-    def _contains_chars(cls, string: str, chars: str) -> bool:
+    def contains_chars(cls, string: str, chars: str) -> bool:
         """
         ### Contains
         Checks whether `string` contains a character from `chars`.
