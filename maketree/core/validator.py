@@ -88,30 +88,6 @@ class Validator:
         return True
 
     @classmethod
-    def validate_tree(cls, tree: List[Dict]):
-        """Validates the whole parsed tree for valid dir and file names."""
-        for entry in tree:
-            if entry["type"] == "directory":
-                # Validate dir
-                valid = cls.is_valid_dir(entry["name"])
-                if valid is not True:
-                    raise ValidationError(valid)
-
-                # Got children?
-                if entry["children"]:
-                    # Recurse
-                    valid = cls.validate_tree(entry["children"])
-                    if valid is not True:
-                        return valid
-
-            else:  # File
-                valid = cls.is_valid_file(entry["name"])
-                if valid is not True:
-                    raise ValidationError("%s: %s" % (entry["name"], valid))
-
-        return True
-
-    @classmethod
     def is_valid_extension(cls, extension: str) -> bool:
         """
         ### Is Valid Extension
