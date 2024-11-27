@@ -3,7 +3,7 @@
 import sys
 from pathlib import Path
 from argparse import ArgumentParser
-from maketree.core.parser import Parser
+from maketree.core.parser import Parser, ParseError
 from maketree.core.validator import Validator
 
 
@@ -34,15 +34,10 @@ def main():
         error("destination path '%s' is not a directory." % dstpath)
 
     # Send file to parser
-    parsed_tree = Parser.parse_file(sourcefile)
-
-    # Validate the tree
-    valid = Validator.validate(parsed_tree)
-    if isinstance(valid, str):  # Errrrr
-        print(valid)
-        sys.exit(1)
-
-    print(parsed_tree)
+    try:
+        parsed_tree = Parser.parse_file(sourcefile)
+    except ParseError as e:
+        error(e)
 
 
 def parse_args():
