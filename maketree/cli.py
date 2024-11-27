@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
-from maketree.core.validator import Validator
+from maketree.core.validator import Validator, ValidationError
 
 
 PROGRAM = "maketree"
@@ -37,6 +37,12 @@ def main():
     try:
         parsed_tree = Parser.parse_file(sourcefile)
     except ParseError as e:
+        error(e)
+
+    # Check if any files already exist.
+    try:
+        Validator.check_if_files_exist(parsed_tree)
+    except ValidationError as e:
         error(e)
 
 
