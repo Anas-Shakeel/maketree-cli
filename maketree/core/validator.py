@@ -1,7 +1,7 @@
 """ Responsible for validating the structure file and ensuring that the defined directory structure is correct and usable. """
 
 from platform import system
-from os.path import splitext
+from os.path import splitext, isfile, isdir
 from typing import List, Dict, Union
 
 
@@ -71,6 +71,27 @@ class Validator:
         )
 
         return True
+
+    @classmethod
+    def check_if_files_exist(cls, tree: List[Dict]):
+        """Traverse the tree and check if a file in tree already exists.
+        If it does, Raise a `ValidationError`"""
+
+        def traverse(node, path):
+            # Iterate through node's children
+            for child in node.get("children", []):
+                name = child["name"]
+                str_path = "/".join(path) + "/" + name
+
+                # Is child a directory?
+                if child["type"] == "directory":
+                    traverse(child, path + [name])
+                else:  # File
+                    if isfile(str_path):
+                        raise ValidationError("File '%s' already exists" % str_path)
+
+        # Treat tree as a '.' directory
+        traverse({"type": "directory", "name": ".", "children": tree}, path=["."])
 
     @classmethod
     def validate_tree(cls, tree: List[Dict]):
