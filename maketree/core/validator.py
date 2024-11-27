@@ -18,18 +18,25 @@ class Validator:
     OS: str = system()
 
     @classmethod
-    def validate(cls, paths: Dict[str, List[str]]):
+    def validate(cls, paths: Dict[str, List[str]]) -> Union[bool, str]:
         """
         Validate the paths from normalizer.
         Returns `True` if valid, Returns `str` (an err message) for otherwise.
 
         It makes sure that:
-        - Files do not already exist
+        - Directories or Files do not already exist
         - There are no duplicate paths
         - There will be no conflicts when creating dirs/files
         """
+        # Check for existing dirs
+        directory = cls.paths_exist(paths["directories"])
+        if directory is not True:
+            return "Directory '%s' already exists" % directory
+
         # Check for existing files
-        exist = cls.paths_exist(paths["files"])
+        file = cls.paths_exist(paths["files"])
+        if file is not True:
+            return "File '%s' already exists" % file
 
     @classmethod
     def check_duplicates(cls, tree: List[Dict]):
@@ -69,14 +76,14 @@ class Validator:
         return True
 
     @classmethod
-    def paths_exist(cls, paths: List[str]):
+    def paths_exist(cls, paths: List[str]) -> Union[bool, str]:
         """
         Check if a path (`file` or `dir`) in `paths` already exists.
-        Returns `True` if none exist, `str` if a path does exist. _(str contains a message)_
+        Returns `True` if no paths already exist, Returns the `path` itself, if it exists.
         """
         for path in paths:
             if exists(path):
-                return "File '%s' already exists"
+                return path
 
         return True
 
