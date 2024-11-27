@@ -43,7 +43,7 @@ def main():
         error(e)
 
     # Create paths from tree nodes
-    paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree)
+    paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree, dstpath)
 
     # Further validate paths
     if issues := validate(paths):
