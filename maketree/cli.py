@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
-from maketree.utils import get_existing_paths, print_on_true
+from maketree.utils import get_existing_paths, print_on_true, print_tree
 from typing import List, Dict, Tuple
 
 
@@ -22,6 +22,7 @@ def main():
     VERBOSE: bool = args.verbose
     OVERWRITE: bool = args.overwrite
     SKIP: bool = args.skip
+    PRINT_TREE = args.graphical
 
     # SRC Exists?
     if not sourcefile.exists():
@@ -51,6 +52,11 @@ def main():
         parsed_tree = Parser.parse_file(sourcefile)
     except ParseError as e:
         error(e)
+
+    # Print the graphical tree and Exit.
+    if PRINT_TREE:
+        print_tree(parsed_tree)
+        sys.exit(0)
 
     # Create paths from tree nodes
     print_on_true("Creating tree paths", VERBOSE)
@@ -84,6 +90,7 @@ def parse_args():
     parser = ArgumentParser(
         prog=PROGRAM,
         usage="%(prog)s [OPTIONS]",
+        epilog="%s %s" % (PROGRAM.title(), VERSION),
         description="A CLI tool to create directory structures from a structure file.",
     )
 
@@ -95,15 +102,21 @@ def parse_args():
         help="where to create the tree structure (default: %(default)s)",
     )
     parser.add_argument(
-        "-v", "--version", action="version", version="%s %s" % (PROGRAM, VERSION)
-    )
-    parser.add_argument(
-        "-V", "--verbose", action="store_true", help="increase verbosity"
+        "-g",
+        "--graphical",
+        action="store_true",
+        help="show source file as graphical tree and exit",
     )
     parser.add_argument(
         "-o", "--overwrite", action="store_true", help="overwrite existing files"
     )
     parser.add_argument("-s", "--skip", action="store_true", help="skip existing files")
+    # parser.add_argument(
+    #     "-v", "--version", action="version", version="%s %s" % (PROGRAM, VERSION)
+    # )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="increase verbosity"
+    )
 
     return parser.parse_args()
 
