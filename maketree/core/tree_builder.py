@@ -41,10 +41,10 @@ class TreeBuilder:
                 os.mkdir(path)
                 count += 1
 
-                print_on_true("Created directory '%s'..." % path, verbose)
+                print_on_true("Created directory '%s'" % path, verbose)
             except FileExistsError:
                 print_on_true(
-                    "Skipped directory '%s', already exists..." % path, verbose
+                    "Skipped directory '%s', already exists" % path, verbose
                 )
                 pass
         return count
@@ -57,13 +57,13 @@ class TreeBuilder:
         count = 0
         for path in files:
             if skip and exists(path):
-                print_on_true("Skipped file '%s', already exists..." % path, verbose)
+                print_on_true("Skipped file '%s', already exists" % path, verbose)
                 continue
 
             # Create the file
             with open(path, "w") as _:
                 pass  # Empty file
             count += 1
-            print_on_true("Created file '%s'..." % path, verbose)
+            print_on_true("Created file '%s'" % path, verbose)
 
         return count

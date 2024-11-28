@@ -53,11 +53,11 @@ def main():
         error(e)
 
     # Create paths from tree nodes
-    print_on_true("Creating tree paths...", VERBOSE)
+    print_on_true("Creating tree paths", VERBOSE)
     paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree, dstpath)
 
     # If Overwrite and Skip both are false
-    print_on_true("Checking existing tree paths...", VERBOSE)
+    print_on_true("Checking existing tree paths", VERBOSE)
     if not OVERWRITE and not SKIP:
         if count := print_existing_paths(paths["files"]):
             error(
@@ -65,7 +65,7 @@ def main():
             )
 
     # Create the files and dirs finally
-    print_on_true("Creating tree on filesystem...", VERBOSE)
+    print_on_true("Creating tree on filesystem", VERBOSE)
     creation_count: Tuple[int, int] = TreeBuilder.build(
         paths, skip=SKIP, verbose=VERBOSE
     )
