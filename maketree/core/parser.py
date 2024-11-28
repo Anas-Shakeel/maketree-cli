@@ -1,7 +1,7 @@
 """  Responsible for reading and parsing the structure file (in `.tree` format),
 that users provide to define the directory structure. """
 
-from maketree.core.validator import Validator
+from maketree.utils import is_valid_dir, is_valid_file
 from typing import List
 
 
@@ -46,7 +46,7 @@ class Parser:
                 }
 
                 # Validate dir name
-                valid = Validator.is_valid_dir(item["name"])
+                valid = is_valid_dir(item["name"])
                 if valid is not True:
                     raise ParseError(
                         "at line %d, in '%s', %s" % (i + 1, item["name"], valid)
@@ -70,7 +70,7 @@ class Parser:
                 item = {"type": "file", "name": line.strip()}
 
                 # Validate file name
-                valid = Validator.is_valid_file(item["name"])
+                valid = is_valid_file(item["name"])
                 if valid is not True:
                     raise ParseError(
                         "at line %d, in '%s', %s" % (i + 1, item["name"], valid)
