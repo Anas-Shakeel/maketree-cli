@@ -67,6 +67,9 @@ def is_valid_file(filename: str) -> Union[bool, str]:
 
     #### ARGS:
     - `filename`: name of the file
+
+    #### Note:
+    This function is not a stripped down version of itself. (specific to needs of the `Parser`, minimal but fast)
     """
     if not filename:
         return "file name must not be empty"
@@ -78,7 +81,7 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     if not root:
         return "invalid file name"
 
-    # TODO: Check for illegal chars here....
+    # Check for illegal chars
     if OS == "Windows":
         if contains_chars(root, r'\/:?*<>"|'):
             return 'illegal characters are not allowed: \\/:?*<>|"'
@@ -103,6 +106,9 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
 
     #### ARGS:
     - `dirname`: the path to validate
+
+    #### Note:
+    This function is not a stripped down version of itself. (specific to needs of the `Parser`, minimal but fast)
     """
     if not dirname:
         return "directory must not be empty."
