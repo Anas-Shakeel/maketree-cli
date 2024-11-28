@@ -5,6 +5,5 @@ assets/
 src/
     index.html
     styles.css
-    styles.css
 user-guide.md
 dev-guide.md
