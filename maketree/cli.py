@@ -4,11 +4,10 @@ import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
-from maketree.core.validator import Validator
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
-from maketree.utils import get_nonexisting_paths, get_existing_paths
-from typing import List, Dict
+from maketree.utils import get_existing_paths, print_on_true
+from typing import List, Dict, Tuple
 
 
 PROGRAM = "maketree"
@@ -46,27 +45,36 @@ def main():
             "Options --overwrite and --skip are mutually exlusive. (use one or the other, not both)"
         )
 
-    # Send file to parser
+    # Parse the source file
+    print_on_true("Parsing %s..." % sourcefile, VERBOSE)
     try:
         parsed_tree = Parser.parse_file(sourcefile)
     except ParseError as e:
         error(e)
 
     # Create paths from tree nodes
+    print_on_true("Creating tree paths...", VERBOSE)
     paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree, dstpath)
 
     # If Overwrite and Skip both are false
+    print_on_true("Checking existing tree paths...", VERBOSE)
     if not OVERWRITE and not SKIP:
         if count := print_existing_paths(paths["files"]):
-            error("\nFix %d issues before moving forward." % count)
+            error(
+                f"\nFix {count} issue{'s' if count > 1 else ''} before moving forward."
+            )
 
     # Create the files and dirs finally
-    TreeBuilder.build(paths, skip=SKIP)
+    print_on_true("Creating tree on filesystem...", VERBOSE)
+    creation_count: Tuple[int, int] = TreeBuilder.build(
+        paths, skip=SKIP, verbose=VERBOSE
+    )
+    print_on_true("Done.\n", VERBOSE)
 
     # Completion message
     print(
-        "%d directories and %d files have been created successfully."
-        % (len(paths["directories"]), len(paths["files"]))
+        "%d directories and %d files have been created."
+        % (creation_count[0], creation_count[1])
     )
 
 
