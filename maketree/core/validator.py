@@ -18,19 +18,6 @@ class Validator:
     OS: str = system()
 
     @classmethod
-    def paths_exist(cls, paths: List[str]) -> List:
-        """
-        Check if a path (`file` or `dir`) in `paths` already exists.
-        Returns `list` of all paths that do exist, or empty list if none do.
-        """
-        existants = []
-        for path in paths:
-            if exists(path):
-                existants.append(path)
-
-        return existants
-
-    @classmethod
     def is_valid_extension(cls, extension: str) -> bool:
         """
         ### Is Valid Extension
