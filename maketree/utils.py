@@ -134,3 +134,15 @@ def contains_chars(string: str, chars: str) -> bool:
     Returns `True` if it does, `False` if does not.
     """
     return any(char for char in chars if char in string)
+
+
+def print_on_true(string: str, bool_: bool):
+    """
+    Prints the string to terminal only if the `bool_` is true.
+    _(Never thought i'd ever create/need such function, but it is useful for
+    dynamically print verbose messages)_
+
+    **Use it only for Verbose messages.**
+    """
+    if bool_:
+        print(string)
