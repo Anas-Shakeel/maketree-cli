@@ -1,9 +1,11 @@
-assets/
-    logo.svg
-    image.png
-    font.ttf
-src/
+node_modules/
+public/
+    favicon.ico
     index.html
-    styles.css
-user-guide.md
-dev-guide.md
+    robots.txt
+src/
+    index.css
+    index.js
+.gitignore
+package.json
+README.md
