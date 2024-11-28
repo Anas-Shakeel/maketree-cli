@@ -4,14 +4,14 @@ import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
-from maketree.core.validator import Validator, ValidationError
+from maketree.core.validator import Validator
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
 from typing import List, Dict
 
 
 PROGRAM = "maketree"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 
 def main():
@@ -48,6 +48,15 @@ def main():
     # Further validate paths
     if issues := validate(paths):
         error(f"\nFix {issues} issue{'s' if issues > 1 else ''} before moving forward.")
+
+    # Create the files and dirs finally
+    TreeBuilder.build(paths)
+
+    # Completion message
+    print(
+        "%d directories and %d files have been created successfully."
+        % (len(paths["directories"]), len(paths["files"]))
+    )
 
 
 def parse_args():
