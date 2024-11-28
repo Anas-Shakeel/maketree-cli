@@ -9,11 +9,22 @@ class TreeBuilder:
     """Build the tree parsed from `.tree` file"""
 
     @classmethod
-    def build(cls, tree: List[Dict]):
+    def build(cls, paths: Dict[str, List[str]]):
         """Create the directories and files on the filesystem."""
-        ...
+        cls.create_dirs(paths["directories"])
+        cls.create_files(paths["files"])
 
     @classmethod
-    def create_file(cls, filename: str):
-        """Create a file with `filename` name."""
-        ...
+    def create_dirs(cls, dirs: List[str]):
+        """Create files with names found in `files`."""
+        for path in dirs:
+            # Create the directory
+            os.mkdir(path)
+
+    @classmethod
+    def create_files(cls, files: List[str]):
+        """Create files with names found in `files`."""
+        for path in files:
+            # Create the file
+            with open(path, "x") as _:
+                pass  # Empty file
