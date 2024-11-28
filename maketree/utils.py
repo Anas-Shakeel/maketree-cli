@@ -4,6 +4,6 @@ from os.path import exists
 from typing import List
 
 
-def remove_existing_paths(paths: List[str]) -> List[str]:
-    """Remove existing paths from `paths` list and return the list."""
+def get_nonexisting_paths(paths: List[str]) -> List[str]:
+    """Returns a list of non-existing paths from `paths` list."""
     return list(filter(lambda p: not exists(p), paths))
