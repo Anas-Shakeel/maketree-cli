@@ -7,3 +7,8 @@ from typing import List
 def get_nonexisting_paths(paths: List[str]) -> List[str]:
     """Returns a list of non-existing paths from `paths` list."""
     return list(filter(lambda p: not exists(p), paths))
+
+
+def get_existing_paths(paths: List[str]) -> List[str]:
+    """Returns a list of existing paths from `paths` list."""
+    return list(filter(lambda p: exists(p), paths))
