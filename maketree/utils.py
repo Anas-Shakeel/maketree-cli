@@ -2,7 +2,7 @@
 
 from os.path import exists, splitext
 from platform import system
-from typing import List, Union
+from typing import List, Dict, Union
 
 
 # Windows, Darwin, Linux
@@ -146,3 +146,44 @@ def print_on_true(string: str, bool_: bool):
     """
     if bool_:
         print(string)
+
+
+def print_tree(tree: List[Dict]):
+    """Prints the parsed `tree` in a graphical format. _(Not perfect but, gets the job done)_"""
+    tab = 0
+    BAR = "│   "
+    LINK = "├───"
+    LINK_LAST = "└───"
+    FMT_STR = f"%s%s %s"
+
+    def traverse(node: Dict, childs: int):
+        nonlocal tab
+        count = 0  # keeps track of child counts
+
+        for child in node.get("children", []):
+            count += 1
+
+            if count == childs:
+                # Last Child
+                print(FMT_STR % (BAR * tab, LINK_LAST, child["name"]))
+            else:
+                # Others
+                print(FMT_STR % (BAR * tab, LINK, child["name"]))
+
+            if child["type"] == "directory" and child["children"]:
+                tab += 1
+                traverse(child, len(child["children"]))
+        tab -= 1
+        return
+
+    # Root dot.
+    print(".")
+
+    traverse(
+        node={
+            "type": "directory",
+            "name": ".",
+            "children": tree,
+        },
+        childs=len(tree),
+    )
