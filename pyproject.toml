@@ -8,7 +8,7 @@ Source = "https://github.com/anas-shakeel/maketree-cli"
 
 [project]
 name = "maketree"
-version = "1.0.0"
+version = "1.0.1"
 description = "A CLI tool to create directory structures from a structure file."
 readme = "README.md"
 license = { file = "LICENSE" }
