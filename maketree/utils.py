@@ -85,13 +85,13 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     # Check for illegal chars
     if OS == "Windows":
         if contains_chars(root, r'\/:?*<>"|'):
-            return 'illegal characters are not allowed: \\/:?*<>|"'
+            return 'avoid these illegal characters: \\/:?*<>|"'
     elif OS == "Darwin":
         if contains_chars(root, r"/:<>"):
-            return "illegal characters are not allowed: /:?<>"
+            return "avoid these illegal characters: /:?<>"
     else:  # Linux
         if contains_chars(root, r"/:<>"):
-            return "illegal characters are not allowed: /:?<>"
+            return "avoid these illegal characters: /:?<>"
 
     if ext_ and not is_valid_extension(ext_):
         return "invalid file extension"
@@ -117,13 +117,13 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     # Check for illegal chars
     if OS == "Windows":
         if contains_chars(dirname, r'\/:?*<>"|'):
-            return 'illegal characters are not allowed: \\/:?*<>|"'
+            return 'avoid these illegal characters: \\/:?*<>|"'
     elif OS == "Darwin":
         if contains_chars(dirname, r"/:<>"):
-            return "illegal characters are not allowed: /:?<>"
+            return "avoid these illegal characters: /:?<>"
     else:
         if contains_chars(dirname, r"/:<>"):
-            return "illegal characters are not allowed: /:?<>"
+            return "avoid these illegal characters: /:?<>"
 
     return True
 
@@ -157,7 +157,7 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
     d = Path(dirpath)
     if d.drive:
         root_parts = d.parts[1:]
-    elif OS == "Linux" and d.parts[0] == "/":
+    elif OS == "Linux" and (d.parts and d.parts[0] == "/"):
         root_parts = d.parts[1:]
     else:
         root_parts = d.parts
@@ -170,13 +170,13 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
     # Check for illegal chars
     if OS == "Windows":
         if _contains(root_parts, r'\/:?*<>"|'):
-            return 'illegal characters are not allowed: \\/:?*<>|"'
+            return 'avoid these characters: \\/:?*<>|"'
     elif OS == "Darwin":
         if _contains(root_parts, r"/:<>"):
-            return "illegal characters are not allowed: /:?<>"
+            return "avoid these characters: /:<>"
     else:
         if _contains(root_parts, r"/:<>"):
-            return "illegal characters are not allowed: /:?<>"
+            return "avoid these characters: /:<>"
 
     return True
 
