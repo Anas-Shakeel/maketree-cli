@@ -1,6 +1,5 @@
 """ Frontend of the project (Argument handling and stuff) """
 
-import os
 import sys
 from pathlib import Path
 from argparse import ArgumentParser
@@ -11,7 +10,7 @@ from maketree.utils import (
     get_existing_paths,
     print_on_true,
     print_tree,
-    is_valid_dirpath,
+    create_dir,
 )
 from typing import List, Dict, Tuple
 
@@ -40,22 +39,13 @@ def main():
         error("source '%s' is not a .tree file." % sourcefile)
 
     # DST Exists?
-    if not dstpath.exists():
-        if CREATE_DST and is_valid_dirpath(dstpath) is True:
-            # Create dstpath
-            try:
-                os.mkdir(dstpath)
-            except FileNotFoundError:
-                error(
-                    "destination path '%s' cannot be created. try another name maybe?"
-                    % dstpath
-                )
-        else:
-            error("destination path '%s' does not exist." % dstpath)
-
-    # DST not a Dir?
     if not dstpath.is_dir():
-        error("destination path '%s' is not a directory." % dstpath)
+        if CREATE_DST:
+            created = create_dir(dstpath)
+            if created is not True:
+                error(created)
+        else:
+            error("destination path '%s' is not an existing directory." % dstpath)
 
     # Mutually Exclusive
     if OVERWRITE and SKIP:
