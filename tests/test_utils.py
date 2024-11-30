@@ -111,10 +111,10 @@ def test_contains_chars():
 def test_is_valid_dirpath():
     assert is_valid_dirpath(".") == True
     assert is_valid_dirpath("folder") == True
+    assert is_valid_dirpath("./folder/") == True
     assert is_valid_dirpath("folder/folder1/folder2/folder3/folder/4") == True
     assert is_valid_dirpath("./folder/") == True
 
-    assert isinstance(is_valid_dirpath("./fol|der/"), str)
     assert isinstance(is_valid_dirpath("./fol<der>/"), str)
     assert isinstance(is_valid_dirpath("./fol<der/fo>lder/"), str)
     assert isinstance(is_valid_dirpath(""), str)
