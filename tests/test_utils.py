@@ -4,6 +4,8 @@ import os
 import shutil
 
 from maketree.utils import (
+    is_valid_dirpath,
+    _contains,
     contains_chars,
     is_valid_dir,
     is_valid_file,
@@ -104,3 +106,29 @@ def test_contains_chars():
 
     assert contains_chars("abc def", " ") == True
     assert contains_chars("abcdef", " ") == False
+
+
+def test_is_valid_dirpath():
+    assert is_valid_dirpath(".") == True
+    assert is_valid_dirpath("folder") == True
+    assert is_valid_dirpath("folder/folder1/folder2/folder3/folder/4") == True
+    assert is_valid_dirpath("./folder/") == True
+
+    assert isinstance(is_valid_dirpath("./fol|der/"), str)
+    assert isinstance(is_valid_dirpath("./fol<der>/"), str)
+    assert isinstance(is_valid_dirpath("./fol<der/fo>lder/"), str)
+    assert isinstance(is_valid_dirpath(""), str)
+
+
+def test_contains():
+    parts = [
+        "abcd",
+        "abcde",
+        "testing",
+        "testing123",
+    ]
+
+    assert _contains(parts, "2td") == True
+    assert _contains(parts, "2td") == True
+    assert _contains(parts, "_:") == False  # None of parts contain _ or :
+    assert _contains(parts, "xz") == False  # None of parts contain x or z
