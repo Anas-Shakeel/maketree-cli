@@ -1,12 +1,18 @@
 """ Frontend of the project (Argument handling and stuff) """
 
+import os
 import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
-from maketree.utils import get_existing_paths, print_on_true, print_tree
+from maketree.utils import (
+    get_existing_paths,
+    print_on_true,
+    print_tree,
+    is_valid_dirpath,
+)
 from typing import List, Dict, Tuple
 
 
@@ -19,6 +25,7 @@ def main():
 
     sourcefile = Path(args.src)
     dstpath = Path(args.dst)
+    CREATE_DST = args.create_dst
     VERBOSE: bool = args.verbose
     OVERWRITE: bool = args.overwrite
     SKIP: bool = args.skip
@@ -34,7 +41,17 @@ def main():
 
     # DST Exists?
     if not dstpath.exists():
-        error("destination path '%s' does not exist." % dstpath)
+        if CREATE_DST and is_valid_dirpath(dstpath) is True:
+            # Create dstpath
+            try:
+                os.mkdir(dstpath)
+            except FileNotFoundError:
+                error(
+                    "destination path '%s' cannot be created. try another name maybe?"
+                    % dstpath
+                )
+        else:
+            error("destination path '%s' does not exist." % dstpath)
 
     # DST not a Dir?
     if not dstpath.is_dir():
@@ -102,6 +119,12 @@ def parse_args():
         help="where to create the tree structure (default: %(default)s)",
     )
     parser.add_argument(
+        "-cd",
+        "--create-dst",
+        action="store_true",
+        help="create destination folder if it doesn't exist.",
+    )
+    parser.add_argument(
         "-g",
         "--graphical",
         action="store_true",
@@ -111,9 +134,6 @@ def parse_args():
         "-o", "--overwrite", action="store_true", help="overwrite existing files"
     )
     parser.add_argument("-s", "--skip", action="store_true", help="skip existing files")
-    # parser.add_argument(
-    #     "-v", "--version", action="version", version="%s %s" % (PROGRAM, VERSION)
-    # )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="increase verbosity"
     )
