@@ -1,5 +1,6 @@
 """ Contains Helper code to keep core logic clean. (things that don't fit anywhere, fit here) """
 
+from os import makedirs
 from os.path import exists, splitext
 from pathlib import Path
 from platform import system
@@ -258,3 +259,14 @@ def print_tree(tree: List[Dict]):
         },
         childs=len(tree),
     )
+
+
+def create_dir(path: str):
+    """Create a folder/directory on the filesystem."""
+    valid = is_valid_dirpath(path)
+    if valid is not True:
+        return valid
+
+    # Create folder
+    makedirs(path, exist_ok=True)
+    return True
