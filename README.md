@@ -44,13 +44,14 @@ positional arguments:
   dst              where to create the tree structure (default: .)
 
 options:
-  -h, --help       show this help message and exit
-  -g, --graphical  show source file as graphical tree and exit
-  -o, --overwrite  overwrite existing files
-  -s, --skip       skip existing files
-  -v, --verbose    increase verbosity
+  -h, --help         show this help message and exit
+  -cd, --create-dst  create destination folder if it does not exist.
+  -g, --graphical    show source file as graphical tree and exit
+  -o, --overwrite    overwrite existing files
+  -s, --skip         skip existing files
+  -v, --verbose      increase verbosity
 
-Maketree 1.0.0
+Maketree 1.0.1
 ```
 
 There is only one required argument that you need to provide, and that is `src`, a source file that defines the tree structure to create.
@@ -104,16 +105,10 @@ Let's now create the structure on our filesystem:
 
 
 
-Let's create a folder in our current directory called `myapp`.
+Let's create a folder in our current directory called `myapp` using `mkdir` or just let `maketree` create it for use using `-cd` or `--create-dst` flag.
 
 ```shell
->> mkdir myapp
-```
-
-And now let's create the structure again, but this time inside `myapp` folder.
-
-```shell
->> maketree myapp.tree myapp
+>> maketree myapp.tree myapp --create-dst
 3 directories and 8 files have been created.
 ```
 
@@ -195,4 +190,4 @@ The structure file can be as simple or complex as you want. There's no limit *(w
 
 ### Note:
 
-_`maketree` is still in it's alpha phase, so you may encounter some bugs. Please report if you do._ 
+_`maketree` is in it's beta phase, so you may encounter some bugs. Please report if you do._ 
