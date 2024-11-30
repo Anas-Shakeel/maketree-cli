@@ -1,8 +1,9 @@
 """ Contains Helper code to keep core logic clean. (things that don't fit anywhere, fit here) """
 
 from os.path import exists, splitext
+from pathlib import Path
 from platform import system
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Iterable
 
 
 # Windows, Darwin, Linux
@@ -111,7 +112,7 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     This function is not a stripped down version of itself. (specific to needs of the `Parser`, minimal but fast)
     """
     if not dirname:
-        return "directory must not be empty."
+        return "path must not be empty."
 
     # Check for illegal chars
     if OS == "Windows":
@@ -127,11 +128,81 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     return True
 
 
+def is_valid_dirpath(dirpath: str, max_length: int = 250):
+    """
+    ### Is Valid Dirpath
+    Validates directory path. Returns `True` if valid, Returns `str` if invalid.
+    This `str` contains the reason for path being invalid.
+
+    #### ARGS:
+    - `dirpath`: the path to validate
+    - `max_length`: maximum length to allow (length of the whole path, except drive)
+
+    #### Example:
+    ```
+    >> is_valid_dirpath("path\\to\\folder")
+    True
+    >> is_valid_dirpath("path\\to\\*Illegal*folder")
+    'Illegal characters are not allowed: \\/:?*<>|"'
+    ```
+
+    Raises `AssertionError` if:
+    - `dirpath` is not a string
+
+    Used for longer dir paths.
+    """
+    if not dirpath:
+        return "path must not be empty."
+
+    d = Path(dirpath)
+    if d.drive:
+        root_parts = d.parts[1:]
+    elif OS == "Linux" and d.parts[0] == "/":
+        root_parts = d.parts[1:]
+    else:
+        root_parts = d.parts
+
+    if sum(len(part) for part in root_parts) > max_length:
+        return (
+            f"maximum length of path can be {max_length} (excluding slashes and drive)"
+        )
+
+    # Check for illegal chars
+    if OS == "Windows":
+        if _contains(root_parts, r'\/:?*<>"|'):
+            return 'illegal characters are not allowed: \\/:?*<>|"'
+    elif OS == "Darwin":
+        if _contains(root_parts, r"/:<>"):
+            return "illegal characters are not allowed: /:?<>"
+    else:
+        if _contains(root_parts, r"/:<>"):
+            return "illegal characters are not allowed: /:?<>"
+
+    return True
+
+
+def _contains(parts: Iterable[str], chars: str) -> bool:
+    """
+    ### Contains
+    Checks whether a string in `parts` contains a character from `chars`.
+    Returns `True` if it does, `False` if does not.
+
+    Used with `is_valid_dirpath` only.
+    """
+    for char in chars:
+        for part in parts:
+            if char in part:
+                return True
+    return False
+
+
 def contains_chars(string: str, chars: str) -> bool:
     """
     ### Contains
     Checks whether `string` contains a character from `chars`.
     Returns `True` if it does, `False` if does not.
+
+    Used with `is_valid_dir`.
     """
     return any(char for char in chars if char in string)
 
