@@ -16,7 +16,7 @@ from typing import List, Dict, Tuple
 
 
 PROGRAM = "maketree"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 
 def main():
