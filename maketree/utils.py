@@ -235,12 +235,17 @@ def print_tree(tree: List[Dict]):
         for child in node.get("children", []):
             count += 1
 
+            # Add a Slash '/' after a directory
+            child_name = child["name"]
+            if child["type"] == "directory":
+                child_name += "/"
+
             if count == childs:
                 # Last Child
-                print(FMT_STR % (BAR * tab, LINK_LAST, child["name"]))
+                print(FMT_STR % (BAR * tab, LINK_LAST, child_name))
             else:
                 # Others
-                print(FMT_STR % (BAR * tab, LINK, child["name"]))
+                print(FMT_STR % (BAR * tab, LINK, child_name))
 
             if child["type"] == "directory" and child["children"]:
                 tab += 1
