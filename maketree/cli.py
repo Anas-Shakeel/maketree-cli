@@ -65,6 +65,14 @@ def main():
         print_tree(parsed_tree)
         sys.exit(0)
 
+    # Confirm before proceeding
+    print_tree(parsed_tree)
+    proceed: bool = input_confirm("\nCreate this structure? (y/N): ")
+    if not proceed:
+        sys.exit(0)
+
+    print()  # Newline
+
     # Create paths from tree nodes
     print_on_true("Creating tree paths", VERBOSE)
     paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree, dstpath)
@@ -146,3 +154,22 @@ def print_existing_paths(paths: List[str]) -> int:
             print("Warning: File '%s' already exists" % path)
 
     return count
+
+
+def input_confirm(message: str) -> bool:
+    """Confirm and return `true` or `false`"""
+    while True:
+        try:
+            answer = input(message).lower()
+            if answer == "y" or answer == "yes":
+                return True
+            elif answer == "n" or answer == "no":
+                return False
+
+            # Otherwise just repeat
+            continue
+        except KeyboardInterrupt:
+            # Force quit
+            sys.exit(1)
+        except:
+            continue

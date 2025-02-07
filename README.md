@@ -120,6 +120,17 @@ Run:
 maketree myapp.tree
 ```
 
+It will ask for confirmation with a graphical representation of the structure.
+
+```sh
+.
+└─── src/
+│   ├─── index.css
+│   └─── index.js
+
+Create this structure? (y/N):
+```
+
 Output:
 
 ```
@@ -158,7 +169,7 @@ Now, run:
 maketree myapp.tree
 ```
 
-Output:
+Output: (After confirming)
 
 ```
 3 directories and 8 files have been created.
@@ -229,7 +240,7 @@ Output:
 
 ### 🔹 Viewing the Structure Graphically
 
-Use `-g` or `--graphical` to visualize the `.tree` file before running `maketree`:
+Use `-g` or `--graphical` to visualize the `myapp.tree` file:
 
 ```sh
 maketree myapp.tree -g
@@ -239,12 +250,12 @@ Output:
 
 ```
 .
-├─── node_modules
-├─── public
+├─── node_modules/
+├─── public/
 │   ├─── favicon.ico
 │   ├─── index.html
 │   └─── robots.txt
-├─── src
+├─── src/
 │   ├─── index.css
 │   └─── index.js
 ├─── .gitignore
@@ -252,7 +263,7 @@ Output:
 └─── README.md
 ```
 
-This helps you preview the structure before applying changes to your filesystem.
+It is also shown before you create a structure for confirmation.
 
 ### 🚀 Summary
 
