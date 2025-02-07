@@ -61,9 +61,17 @@ There are several ways to contribute to Maketree:
 
 5. **Create a Branch:**  
    Always create a new branch for your changes:
+
     ```sh
     git checkout -b your-feature-branch
     ```
+
+6. **Running maketree**  
+   Run maketree with this command:
+    ```sh
+    python ./maketree -h
+    ```
+    The whole `maketree/` directory acts as a module/package.
 
 ### Coding Guidelines
 
