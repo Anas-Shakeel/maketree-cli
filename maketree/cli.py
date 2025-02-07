@@ -168,5 +168,8 @@ def input_confirm(message: str) -> bool:
 
             # Otherwise just repeat
             continue
+        except KeyboardInterrupt:
+            # Force quit
+            sys.exit(1)
         except:
             continue
