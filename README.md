@@ -1,23 +1,35 @@
 # Maketree CLI
 
-[![GitHub Repository](https://img.shields.io/badge/-GitHub-%230D0D0D?logo=github&labelColor=gray)](https://github.com/anas-shakeel/maketree-cli) 
+[![GitHub Repository](https://img.shields.io/badge/-GitHub-%230D0D0D?logo=github&labelColor=gray)](https://github.com/anas-shakeel/maketree-cli)
 [![Latest PyPi version](https://img.shields.io/pypi/v/maketree.svg)](https://pypi.python.org/pypi/maketree)
 [![supported Python versions](https://img.shields.io/pypi/pyversions/maketree)](https://pypi.python.org/pypi/maketree)
 [![Project licence](https://img.shields.io/pypi/l/maketree?color=blue)](LICENSE)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](black)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/maketree?color=%232ecc71)](https://pypistats.org/packages/maketree)
 
+Create project structures effortlessly with a single command.
 
-A Command-line Application to create directory structures from a structure file. It let's you create the most complex directory structures in a blink or two.
+## 📜 Overview
 
+Maketree is a powerful CLI tool that generates **directories** and **files** based on a predefined structure. Instead of manually creating folders and files, just define your structure and let **Maketree** handle the rest.
 
-## Features:
-- Zero dependencies
-- Easy to write structure syntax
-- User friendly.
-  
+## 💡 Why Maketree?
 
-## Installation:
+-   **Saves Time**: No more manually creating directories and files.
+-   **Consistency**: Maintain a standard project structure across all your projects.
+-   **Easy to Use**: Define a structure in plain text and generate it instantly.
+
+## 🧐 Features:
+
+-   **Supports nested directory structures**
+-   **Automatically creates missing parent directories**
+-   **Flexible file handling with warning, skip, and overwrite options**
+-   **Preview the directory tree before creation**
+-   **Simple and easy to write structure syntax**
+-   **Lightweight, fast, and has zero dependencies**
+-   **Simple and user-friendly CLI**
+
+## 🛠️ Installation:
 
 `maketree` can easily be installed using `pip`.
 
@@ -27,26 +39,56 @@ pip install maketree
 
 `python>=3.8` must be installed on your system.
 
+## ⚡ Quickstart:
 
+Define your project structure in a `.tree` file:
 
-## Basic Usage:
+`structure.tree`
 
-Once `maketree` is installed, you can run it from any location in your terminal.
+```plaintext
+my_project/
+    src/
+        main.py
+        utils.py
+    tests/
+        test_main.py
+    README.md
+    .gitignore
+```
 
-```shell
->> maketree -h
+Then, run:
+
+```sh
+maketree structure.tree
+```
+
+This will instantly generate the entire structure in the current directory, on your machine.
+
+## 📖 Usage
+
+You can `maketree` from any location in your terminal.
+
+### 🔹 Display Help
+
+```sh
+maketree -h
+```
+
+This will show the available commands and options:
+
+```sh
 usage: maketree [OPTIONS]
 
 A CLI tool to create directory structures from a structure file.
 
 positional arguments:
   src              source file (with .tree extension)
-  dst              where to create the tree structure (default: .)
+  dst              destination folder (default: .)
 
 options:
   -h, --help         show this help message and exit
-  -cd, --create-dst  create destination folder if it does not exist.
-  -g, --graphical    show source file as graphical tree and exit
+  -cd, --create-dst  create destination folder if it does not exist
+  -g, --graphical    display source file as graphical tree and exit
   -o, --overwrite    overwrite existing files
   -s, --skip         skip existing files
   -v, --verbose      increase verbosity
@@ -54,33 +96,49 @@ options:
 Maketree 1.0.1
 ```
 
-There is only one required argument that you need to provide, and that is `src`, a source file that defines the tree structure to create.
+### 🔹 Creating a Directory Structure
 
-`maketree` parses the tree structure defined in a `.tree` file and then creates the directories and/or files on the filesystem. Let's create this structure file and name it `myapp.tree`.
+**Maketree** reads a `.tree` file that defines the folder and file hierarchy and then creates the corresponding structure on your filesystem.
 
-```
+#### 1️⃣ Define the Structure
+
+Create a file named `myapp.tree`:
+
+```sh
 src/
     index.css
     index.js
 ```
 
-We want maketree to create a folder called `src` and two files in that folder namely `index.css` and `index.js`. Notice i've used `4` space indentation for nesting and a forward slash to mark `src` as a directory and not a file.
+This will create a src folder with two files: `index.css` and `index.js`.
 
-Defining a directory structure is fairly easy. You just write the names of folders and files you want to create, nest them as per you needs and that's it.
+#### 2️⃣ Generate the Structure
 
-**There are only three rules you must follow:**
+Run:
 
-1. Directories must end with a forward slash `/`
+```sh
+maketree myapp.tree
+```
 
-2. Indentation must always be of `4` spaces *(it tolerates other indentations but may produce unexpected results)*
-
-3. And directory or file names must be valid according to your OS.
-   
-   
-
-Let's add more files and folders in `myapp.tree` file.
+Output:
 
 ```
+1 directory and 2 files have been created.
+```
+
+By default, maketree creates the structure in the current directory.
+
+### 🔹 Rules for Writing a `.tree` File
+
+To ensure correctness, follow these three rules:
+
+1. **Directories must end with `/`**
+2. **Indentation must be exactly 4 spaces (other indentations may cause unexpected results)**
+3. **File and folder names must be valid according to your OS**
+
+#### Example: Complex Structure
+
+```sh
 node_modules/
 public/
     favicon.ico
@@ -94,80 +152,92 @@ package.json
 README.md
 ```
 
-Let's now create the structure on our filesystem:
+Now, run:
 
-```shell
->> maketree myapp.tree
+```sh
+maketree myapp.tree
+```
+
+Output:
+
+```
 3 directories and 8 files have been created.
 ```
 
-`maketree` creates the structure in current directory by default. You can also provide a destination location to create the structure in that location.
+### 🔹 Specifying a Destination Folder
 
+You can specify a destination folder instead of creating the structure in the current directory.
 
+#### Example: Create a folder myapp and generate the structure inside it
 
-Let's create a folder in our current directory called `myapp` using `mkdir` or just let `maketree` create it for use using `-cd` or `--create-dst` flag.
+```sh
+maketree myapp.tree myapp --create-dst
+```
 
-```shell
->> maketree myapp.tree myapp --create-dst
+Output:
+
+```
 3 directories and 8 files have been created.
 ```
 
-It created the structure in `myapp` folder.
+### 🔹 Handling Existing Files
 
+If you run `maketree` again in the same directory without deleting files, you’ll see warnings:
 
+```sh
+maketree myapp.tree myapp
+```
 
-But what if we run it again? without deleting the structure in `myapp` folder? Let's see.
+Output:
 
-```shell
->> maketree myapp.tree myapp
-Warning: File 'app\public\favicon.ico' already exists
-Warning: File 'app\public\index.html' already exists
-Warning: File 'app\public\robots.txt' already exists
-Warning: File 'app\src\index.css' already exists
-Warning: File 'app\src\index.js' already exists
-Warning: File 'app\.gitignore' already exists
-Warning: File 'app\package.json' already exists
-Warning: File 'app\README.md' already exists
-
+```
+Warning: File 'myapp/public/favicon.ico' already exists
+Warning: File 'myapp/public/index.html' already exists
+...
 Fix 8 issues before moving forward.
 ```
 
-`maketree` won't overwrite existing files by default. It warns you which files already exist and quits.
+By default, `maketree` does not overwrite existing files.
 
-But if you don't want to delete the files yourself or you just want `maketree` to overwrite them, You can give `-o` or `--overwrite` to overwrite existing files.
+#### 1️⃣ Overwrite Existing Files
 
-```shell
->> maketree myapp.tree myapp --overwrite
+Use the `-o` or `--overwrite` flag to replace files:
+
+```sh
+maketree myapp.tree myapp --overwrite
+```
+
+Output:
+
+```
 0 directories and 8 files have been created.
 ```
 
-It overwrites existing files as expected.
+#### 2️⃣ Skip Existing Files
 
+Use the `-s` or `--skip` flag to keep existing files but create missing ones:
 
-
-There's also a `-s` or `-skip` flag that skips existing files and create non-existing ones.
-
-Let's first delete all files in public folder.
-
-```shell
->> rm myapp/public/*
+```sh
+maketree myapp.tree myapp --skip
 ```
 
-Now let's re-run the maketree command *(but this time, with `--skip` flag)*.
+Output:
 
-```shell
->> maketree myapp.tree myapp --skip
+```
 0 directories and 3 files have been created.
 ```
 
-It skipped all files that already existed and created the ones that didn't.
+### 🔹 Viewing the Structure Graphically
 
+Use `-g` or `--graphical` to visualize the `.tree` file before running `maketree`:
 
+```sh
+maketree myapp.tree -g
+```
 
-You can also see a graphical representation of the tree structure in `.tree` file with `'-g` or `--graphical` command.
+Output:
 
-```shell
->> maketree myapp.tree -g
+```
 .
 ├─── node_modules
 ├─── public
@@ -182,12 +252,92 @@ You can also see a graphical representation of the tree structure in `.tree` fil
 └─── README.md
 ```
 
-It makes it easy to see visualize the structure `maketree` will create on your filesystem.
+This helps you preview the structure before applying changes to your filesystem.
 
-The structure file can be as simple or complex as you want. There's no limit *(well unless the OS you're using doesn't have any)*.
+### 🚀 Summary
 
+| Feature           | Command Example                 |
+| ----------------- | ------------------------------- |
+| Create structure  | `maketree myapp.tree`           |
+| Set destination   | `maketree myapp.tree myapp -cd` |
+| Overwrite files   | `maketree myapp.tree myapp -o`  |
+| Skip existing     | `maketree myapp.tree myapp -s`  |
+| Graphical preview | `maketree myapp.tree -g`        |
 
+## 🔗 Compatibility
 
-### Note:
+Maketree is compatible with the following operating systems and Python versions:
 
-_`maketree` is in it's beta phase, so you may encounter some bugs. Please report if you do._ 
+| OS      | Compatibility |
+| ------- | ------------- |
+| Linux   | ✅ Supported  |
+| macOS   | ✅ Supported  |
+| Windows | ✅ Supported  |
+
+### 🐍 Python Version Support
+
+Maketree works with **Python 3.8 and later**, ensuring compatibility with the latest Python releases.
+
+| Python Version | Compatibility         |
+| -------------- | --------------------- |
+| 3.8            | ✅ Supported          |
+| 3.9            | ✅ Supported          |
+| 3.10           | ✅ Supported          |
+| 3.11           | ✅ Supported          |
+| 3.12           | ✅ Supported          |
+| 3.13           | ✅ Supported (Latest) |
+
+## ❓ FAQ
+
+#### ❓ What is Maketree?
+
+Maketree is a command-line tool that helps developers quickly generate a predefined folder and file structure for Python-based CLI applications. It eliminates the need to manually create directories and files, allowing developers to start coding right away with a well-organized project structure.
+
+#### ❓ Why should I use Maketree?
+
+If you frequently create CLI applications, Maketree saves you time by setting up a standardized project structure instantly. It follows best practices and helps you maintain consistency across different projects.
+
+#### ❓ How do I install Maketree?
+
+You can install Maketree via pip:
+
+```sh
+pip install maketree
+```
+
+After installation, you can use the `maketree` command in your terminal.
+
+#### ❓ How do I use Maketree to generate a project structure?
+
+Simply create a file like `filename.tree` and define your project structure in it, then run the following command:
+
+```sh
+maketree filename.tree
+```
+
+This will create the files and folders you specified in `filename.tree` file.
+
+#### ❓ What should I do if I find a bug?
+
+If you encounter a bug, please [open an issue](https://github.com/Anas-Shakeel/maketree-cli/issues) on GitHub with details about the problem. Be sure to include:
+
+-   A description of the issue
+-   Steps to reproduce
+-   Expected vs. actual behavior
+-   Any error messages you received
+
+#### ❓ How can I uninstall Maketree?
+
+To remove Maketree from your system, run:
+
+```sh
+pip uninstall maketree
+```
+
+## Contributing
+
+Contributions to **Maketree** are welcome and highly appreciated. However, before you jump right into it, i would like you to review [Contribution Guidelines](https://github.com/anas-shakeel/maketree-cli/blob/main/CONTRIBUTING.md) to make sure you have a smooth experience contributing to **Maketree**.
+
+## ❕ Note:
+
+_`maketree` is in it's beta phase, so you may encounter some bugs. Please report if you do._
