@@ -31,6 +31,7 @@ def main():
     SKIP: bool = args.skip
     PRINT_TREE = args.graphical
     NO_COLORS = args.no_color
+    NO_CONFIRM = args.no_confirm
 
     # SRC Exists?
     if not sourcefile.exists():
@@ -69,10 +70,11 @@ def main():
         sys.exit(0)
 
     # Confirm before proceeding
-    print_tree(parsed_tree, dstpath)
-    proceed: bool = input_confirm("\nCreate this structure? (y/N): ", NO_COLORS)
-    if not proceed:
-        sys.exit(0)
+    if not NO_CONFIRM:
+        print_tree(parsed_tree, dstpath)
+        proceed: bool = input_confirm("\nCreate this structure? (y/N): ", NO_COLORS)
+        if not proceed:
+            sys.exit(0)
 
     _print("\nCreating tree paths...", VERBOSE, NO_COLORS, "light_magenta")
 
@@ -149,6 +151,12 @@ def parse_args():
         "--no-color",
         action="store_true",
         help="don't use colors in output",
+    )
+    parser.add_argument(
+        "-nC",
+        "--no-confirm",
+        action="store_true",
+        help="don't ask for confirmation",
     )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="increase verbosity"
