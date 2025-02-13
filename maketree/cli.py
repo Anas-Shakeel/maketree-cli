@@ -6,11 +6,12 @@ from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
+from maketree.terminal_colors import colored, printc
 from maketree.utils import (
     get_existing_paths,
-    print_on_true,
     print_tree,
     create_dir,
+    _print,
 )
 from typing import List, Dict, Tuple
 
@@ -29,6 +30,7 @@ def main():
     OVERWRITE: bool = args.overwrite
     SKIP: bool = args.skip
     PRINT_TREE = args.graphical
+    NO_COLORS = False
 
     # SRC Exists?
     if not sourcefile.exists():
@@ -50,11 +52,12 @@ def main():
     # Mutually Exclusive
     if OVERWRITE and SKIP:
         error(
-            "Options --overwrite and --skip are mutually exlusive. (use one or the other, not both)"
+            "Options --overwrite and --skip are mutually exlusive. "
+            "(use one or the other, not both)"
         )
 
     # Parse the source file
-    print_on_true("Parsing %s..." % sourcefile, VERBOSE)
+    _print("Parsing %s..." % sourcefile, VERBOSE, NO_COLORS, "light_magenta")
     try:
         parsed_tree = Parser.parse_file(sourcefile)
     except ParseError as e:
@@ -66,36 +69,37 @@ def main():
         sys.exit(0)
 
     # Confirm before proceeding
-    print_tree(parsed_tree)
-    proceed: bool = input_confirm("\nCreate this structure? (y/N): ")
+    print_tree(parsed_tree, dstpath)
+    proceed: bool = input_confirm("\nCreate this structure? (y/N): ", NO_COLORS)
     if not proceed:
         sys.exit(0)
 
-    print()  # Newline
+    _print("\nCreating tree paths...", VERBOSE, NO_COLORS, "light_magenta")
 
     # Create paths from tree nodes
-    print_on_true("Creating tree paths", VERBOSE)
     paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree, dstpath)
 
+    _print("Checking existing tree paths...", VERBOSE, NO_COLORS, "light_magenta")
+
     # If Overwrite and Skip both are false
-    print_on_true("Checking existing tree paths", VERBOSE)
     if not OVERWRITE and not SKIP:
-        if count := print_existing_paths(paths["files"]):
+        if count := print_existing_paths(paths["files"], NO_COLORS):
             error(
-                f"\nFix {count} issue{'s' if count > 1 else ''} before moving forward."
+                f"\nFix {count} issue{'s' if count > 1 else ''} "
+                "before moving forward."
             )
 
+    _print("Creating tree on filesystem...\n", VERBOSE, NO_COLORS, "light_magenta")
+
     # Create the files and dirs finally
-    print_on_true("Creating tree on filesystem", VERBOSE)
-    creation_count: Tuple[int, int] = TreeBuilder.build(
-        paths, skip=SKIP, verbose=VERBOSE
+    build_count: Tuple[int, int] = TreeBuilder.build(
+        paths, skip=SKIP, overwrite=OVERWRITE, verbose=VERBOSE
     )
-    print_on_true("Done.\n", VERBOSE)
 
     # Completion message
     print(
-        "%d directories and %d files have been created."
-        % (creation_count[0], creation_count[1])
+        f"\n{colored(f'{build_count[0]} directories', "light_green")} and "
+        f"{colored(f'{build_count[1]} files', "light_green")} have been created."
     )
 
 
@@ -106,7 +110,7 @@ def parse_args():
         prog=PROGRAM,
         usage="%(prog)s [OPTIONS]",
         epilog="%s %s" % (PROGRAM.title(), VERSION),
-        description="A CLI tool to create directory structures from a structure file.",
+        description="Create project structures effortlessly.",
     )
 
     parser.add_argument("src", help="source file (with .tree extension)")
@@ -141,26 +145,32 @@ def parse_args():
 
 def error(message: str):
     """Print `message` and exit with status `1`. Use upon errors only."""
-    print(message)
+    printc(message, "light_red")
     sys.exit(1)
 
 
-def print_existing_paths(paths: List[str]) -> int:
+def print_existing_paths(paths: List[str], no_color: bool = False) -> int:
     """Print existing paths. Return the number of paths that exist."""
     count = 0
     if existing_paths := get_existing_paths(paths):
+        print()  # Initial newline
         count = len(existing_paths)
         for path in existing_paths:
-            print("Warning: File '%s' already exists" % path)
+            _print(
+                "Warning: File '%s' already exists" % path,
+                no_color=no_color,
+                fgcolor="yellow",
+            )
 
     return count
 
 
-def input_confirm(message: str) -> bool:
+def input_confirm(message: str, no_color: bool = False) -> bool:
     """Confirm and return `true` or `false`"""
     while True:
         try:
-            answer = input(message).lower()
+            _print(message, no_color=no_color, fgcolor="light_magenta", end="")
+            answer = input().lower()
             if answer == "y" or answer == "yes":
                 return True
             elif answer == "n" or answer == "no":
