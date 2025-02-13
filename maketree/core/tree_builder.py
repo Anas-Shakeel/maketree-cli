@@ -12,7 +12,11 @@ class TreeBuilder:
 
     @classmethod
     def build(
-        cls, paths: Dict[str, List[str]], skip: bool = False, verbose: bool = False
+        cls,
+        paths: Dict[str, List[str]],
+        skip: bool = False,
+        overwrite: bool = False,
+        verbose: bool = False,
     ) -> Tuple[int, int]:
         """
         ### Build
@@ -21,13 +25,16 @@ class TreeBuilder:
         #### Args:
         - `paths`: the paths dictionary
         - `skip`: skips existing files
+        - `overwrite`: overwrites existing files
         - `verbose`: print messages while creating dirs/files
 
         Returns a `tuple[int, int]` containing the number of
         dirs and files created, in that order.
         """
         dirs_created = cls.create_dirs(paths["directories"], verbose=verbose)
-        files_created = cls.create_files(paths["files"], skip=skip, verbose=verbose)
+        files_created = cls.create_files(
+            paths["files"], skip=skip, overwrite=overwrite, verbose=verbose
+        )
 
         return (dirs_created, files_created)
 
@@ -43,15 +50,17 @@ class TreeBuilder:
 
                 print_on_true("Created directory '%s'" % path, verbose)
             except FileExistsError:
-                print_on_true(
-                    "Skipped directory '%s', already exists" % path, verbose
-                )
+                print_on_true("Skipped directory '%s', already exists" % path, verbose)
                 pass
         return count
 
     @classmethod
     def create_files(
-        cls, files: List[str], skip: bool = False, verbose: bool = False
+        cls,
+        files: List[str],
+        skip: bool = False,
+        overwrite: bool = False,
+        verbose: bool = False,
     ) -> int:
         """Create files with names found in `files`. Returns the number of files created."""
         count = 0
@@ -60,10 +69,18 @@ class TreeBuilder:
                 print_on_true("Skipped file '%s', already exists" % path, verbose)
                 continue
 
-            # Create the file
-            with open(path, "w") as _:
-                pass  # Empty file
             count += 1
+
+            # Overwrite file
+            if overwrite:
+                print_on_true("Overwriting file '%s'" % path, verbose)
+                with open(path, "w") as _:
+                    pass  # Empty file
+                continue
+
+            # Create file
             print_on_true("Created file '%s'" % path, verbose)
+            with open(path, "x") as _:
+                pass  # Empty file
 
         return count
