@@ -86,6 +86,3 @@ def printc(
 ):
     """Colorize and then print text"""
     print(colored(text, fgcolor, bgcolor, attrs))
-
-
-print([colored("This is string.", "blue")])
