@@ -221,7 +221,7 @@ def print_on_true(string: str, bool_: bool):
         print(string)
 
 
-def print_tree(tree: List[Dict]):
+def print_tree(tree: List[Dict], root: str = "."):
     """Prints the parsed `tree` in a graphical format. _(Not perfect but, gets the job done)_"""
     tab = 0
     BAR = "│   "
@@ -255,7 +255,7 @@ def print_tree(tree: List[Dict]):
         return
 
     # Root dot.
-    print(".")
+    print(root)
 
     traverse(
         node={
