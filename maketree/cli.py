@@ -30,7 +30,7 @@ def main():
     OVERWRITE: bool = args.overwrite
     SKIP: bool = args.skip
     PRINT_TREE = args.graphical
-    NO_COLORS = False
+    NO_COLORS = args.no_color
 
     # SRC Exists?
     if not sourcefile.exists():
@@ -136,6 +136,12 @@ def parse_args():
         "-o", "--overwrite", action="store_true", help="overwrite existing files"
     )
     parser.add_argument("-s", "--skip", action="store_true", help="skip existing files")
+    parser.add_argument(
+        "-nc",
+        "--no-color",
+        action="store_true",
+        help="don't use colors in output",
+    )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="increase verbosity"
     )
