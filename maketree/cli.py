@@ -92,15 +92,23 @@ def main():
     _print("Creating tree on filesystem...\n", VERBOSE, NO_COLORS, "light_magenta")
 
     # Create the files and dirs finally
-    build_count: Tuple[int, int] = TreeBuilder.build(
-        paths, skip=SKIP, overwrite=OVERWRITE, verbose=VERBOSE
+    build_count = TreeBuilder.build(
+        paths,
+        skip=SKIP,
+        overwrite=OVERWRITE,
+        verbose=VERBOSE,
+        no_color=NO_COLORS,
     )
 
     # Completion message
-    print(
-        f"\n{colored(f'{build_count[0]} directories', "light_green")} and "
-        f"{colored(f'{build_count[1]} files', "light_green")} have been created."
-    )
+    if not NO_COLORS:
+        built_dirs = colored(f"{build_count[0]} directories", "light_green")
+        built_files = colored(f"{build_count[1]} files", "light_green")
+    else:
+        built_dirs = f"{build_count[0]} directories"
+        built_files = f"{build_count[1]} files"
+
+    print(f"\n{built_dirs} and {built_files} have been created.")
 
 
 def parse_args():
