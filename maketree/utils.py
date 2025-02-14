@@ -209,18 +209,6 @@ def contains_chars(string: str, chars: str) -> bool:
     return any(char for char in chars if char in string)
 
 
-def print_on_true(string: str, bool_: bool):
-    """
-    Prints the string to terminal only if the `bool_` is true.
-    _(Never thought i'd ever create/need such function, but it is useful for
-    printing verbose messages dynamically)_
-
-    **Use it only for Verbose messages.**
-    """
-    if bool_:
-        print(string)
-
-
 def print_tree(tree: List[Dict], root: str = "."):
     """Prints the parsed `tree` in a graphical format. _(Not perfect but, gets the job done)_"""
     tab = 0
