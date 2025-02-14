@@ -2,8 +2,7 @@
 based on the parsed data from the structure file. """
 
 import os
-from os.path import exists
-from maketree.utils import print_on_true, _print
+from maketree.utils import _print
 from typing import List, Dict, Tuple
 
 
