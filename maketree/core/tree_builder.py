@@ -13,6 +13,7 @@ class TreeBuilder:
     def build(
         cls,
         paths: Dict[str, List[str]],
+        console,
         skip: bool = False,
         overwrite: bool = False,
         verbose: bool = False,
@@ -32,42 +33,35 @@ class TreeBuilder:
         Returns a `tuple[int, int]` containing the number of
         dirs and files created, in that order.
         """
+        # Console instance from CLI
+        cls.console = console
+
         # Create directories
-        dirs_created = cls.create_dirs(
-            paths["directories"], verbose=verbose, no_color=no_color
-        )
+        dirs_created = cls.create_dirs(paths["directories"])
 
         # Create Files
         files_created = cls.create_files(
             paths["files"],
             skip=skip,
             overwrite=overwrite,
-            verbose=verbose,
-            no_color=no_color,
         )
 
         return (dirs_created, files_created)
 
     @classmethod
-    def create_dirs(
-        cls,
-        dirs: List[str],
-        verbose: bool = False,
-        no_color: bool = False,
-    ) -> int:
-        """Create files with names found in `files`. Returns the number of dirs created."""
+    def create_dirs(cls, dirs: List[str]) -> int:
+        """Create files with names found in `files`.
+        Returns the number of dirs created."""
         count = 0
         for path in dirs:
             try:
                 os.mkdir(path)  # Create the directory
                 count += 1
-                _print("[D] Creating '%s'" % path, verbose, no_color, "light_green")
+                cls.console.print("[D] Creating '%s'" % path, "light_green")
 
             except FileExistsError:
-                _print(
+                cls.console.print(
                     "[D] Skipping '%s', already exists" % path,
-                    verbose,
-                    no_color,
                     "light_yellow",
                 )
         return count
@@ -78,8 +72,6 @@ class TreeBuilder:
         files: List[str],
         skip: bool = False,
         overwrite: bool = False,
-        verbose: bool = False,
-        no_color: bool = False,
     ) -> int:
         """Create files with names found in `files`. Returns the number of files created."""
         count = 0
@@ -87,16 +79,14 @@ class TreeBuilder:
             try:
                 # Create file
                 with open(path, "x") as _:
-                    _print("[f] Creating '%s'" % path, verbose, no_color, "light_green")
+                    cls.console.print("[f] Creating '%s'" % path, "light_green")
 
                 count += 1
             except FileExistsError:
                 # Skip file
                 if skip:
-                    _print(
+                    cls.console.print(
                         "[F] Skipping '%s', already exists" % path,
-                        verbose,
-                        no_color,
                         "light_yellow",
                     )
                     continue
@@ -104,9 +94,7 @@ class TreeBuilder:
                 # Overwrite file
                 if overwrite:
                     count += 1
-                    _print(
-                        "[F] Overwriting '%s'" % path, verbose, no_color, "light_blue"
-                    )
+                    cls.console.print("[F] Overwriting '%s'" % path, "light_blue")
                     with open(path, "w") as _:
                         continue
 

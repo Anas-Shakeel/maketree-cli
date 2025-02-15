@@ -7,6 +7,7 @@ from maketree.core.parser import Parser, ParseError
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
 from maketree.terminal_colors import colored, printc
+from maketree.console import Console
 from maketree.utils import (
     get_existing_paths,
     print_tree,
@@ -33,36 +34,43 @@ def main():
     NO_COLORS = args.no_color
     NO_CONFIRM = args.no_confirm
 
+    # Console? (is this fuc**ing Yavascript?)
+    console = Console(VERBOSE, NO_COLORS)
+
     # SRC Exists?
     if not sourcefile.exists():
-        error("source '%s' does not exist." % sourcefile)
+        console.error("source '%s' does not exist." % sourcefile)
 
     # SRC Tree file?
     if not sourcefile.name.endswith(".tree"):
-        error("source '%s' is not a .tree file." % sourcefile)
+        console.error("source '%s' is not a .tree file." % sourcefile)
 
     # DST Exists?
     if not dstpath.is_dir():
         if CREATE_DST:
+            console.verbose("Creating '%s'..." % dstpath)
             created = create_dir(dstpath)
             if created is not True:
-                error(created)
+                console.error(created)
         else:
-            error("destination path '%s' is not an existing directory." % dstpath)
+            console.error(
+                "destination path '%s' does not exist."
+                % colored(str(dstpath), "light_red"),
+            )
 
     # Mutually Exclusive
     if OVERWRITE and SKIP:
-        error(
+        console.error(
             "Options --overwrite and --skip are mutually exlusive. "
             "(use one or the other, not both)"
         )
 
     # Parse the source file
-    _print("Parsing %s..." % sourcefile, VERBOSE, NO_COLORS, "light_magenta")
+    console.verbose("Parsing %s..." % sourcefile)
     try:
         parsed_tree = Parser.parse_file(sourcefile)
     except ParseError as e:
-        error(e)
+        console.error(e)
 
     # Print the graphical tree and Exit.
     if PRINT_TREE:
@@ -72,30 +80,46 @@ def main():
     # Confirm before proceeding
     if not NO_CONFIRM:
         print_tree(parsed_tree, dstpath)
-        proceed: bool = input_confirm("\nCreate this structure? (y/N): ", NO_COLORS)
+        proceed: bool = console.input_confirm(
+            "Create this structure? (y/N): ", fgcolor="light_magenta"
+        )
         if not proceed:
             sys.exit(0)
 
-    _print("\nCreating tree paths...", VERBOSE, NO_COLORS, "light_magenta")
+    console.verbose("Creating tree paths...")
 
     # Create paths from tree nodes
     paths: Dict[str, List[str]] = Normalizer.normalize(parsed_tree, dstpath)
 
-    _print("Checking existing tree paths...", VERBOSE, NO_COLORS, "light_magenta")
-
     # If Overwrite and Skip both are false
     if not OVERWRITE and not SKIP:
-        if count := print_existing_paths(paths["files"], NO_COLORS):
-            error(
-                f"\nFix {count} issue{'s' if count > 1 else ''} "
-                "before moving forward."
+        console.verbose("Checking existing paths...")
+        # Check existing paths
+        existing_paths = get_existing_paths(paths["files"])
+        count = len(existing_paths)
+
+        # Any path exists?
+        if count:
+            console.print_lines(
+                existing_paths,
+                "Warning: File already exists: ",
+                color="light_yellow",
+            )
+            console.error(
+                f"Found {count} existing files, cannot proceed. "
+                "(try %s or %s)"
+                % (
+                    colored("--skip", "light_yellow"),
+                    colored("--overwrite", "light_yellow"),
+                )
             )
 
-    _print("Creating tree on filesystem...\n", VERBOSE, NO_COLORS, "light_magenta")
+    console.verbose("Creating tree on filesystem...\n")
 
     # Create the files and dirs finally
     build_count = TreeBuilder.build(
         paths,
+        console,
         skip=SKIP,
         overwrite=OVERWRITE,
         verbose=VERBOSE,
@@ -165,12 +189,14 @@ def parse_args():
     return parser.parse_args()
 
 
+# TODO: Remove this
 def error(message: str):
     """Print `message` and exit with status `1`. Use upon errors only."""
     printc(message, "light_red")
     sys.exit(1)
 
 
+# TODO: Remove this
 def print_existing_paths(paths: List[str], no_color: bool = False) -> int:
     """Print existing paths. Return the number of paths that exist."""
     count = 0
