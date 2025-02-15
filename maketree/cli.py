@@ -6,13 +6,12 @@ from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
-from maketree.terminal_colors import colored, printc
+from maketree.terminal_colors import colored
 from maketree.console import Console
 from maketree.utils import (
     get_existing_paths,
     print_tree,
     create_dir,
-    _print,
 )
 from typing import List, Dict, Tuple
 
@@ -187,47 +186,3 @@ def parse_args():
     )
 
     return parser.parse_args()
-
-
-# TODO: Remove this
-def error(message: str):
-    """Print `message` and exit with status `1`. Use upon errors only."""
-    printc(message, "light_red")
-    sys.exit(1)
-
-
-# TODO: Remove this
-def print_existing_paths(paths: List[str], no_color: bool = False) -> int:
-    """Print existing paths. Return the number of paths that exist."""
-    count = 0
-    if existing_paths := get_existing_paths(paths):
-        print()  # Initial newline
-        count = len(existing_paths)
-        for path in existing_paths:
-            _print(
-                "Warning: File '%s' already exists" % path,
-                no_color=no_color,
-                fgcolor="yellow",
-            )
-
-    return count
-
-
-def input_confirm(message: str, no_color: bool = False) -> bool:
-    """Confirm and return `true` or `false`"""
-    while True:
-        try:
-            _print(message, no_color=no_color, fgcolor="light_magenta", end="")
-            answer = input().lower()
-            if answer == "y" or answer == "yes":
-                return True
-            elif answer == "n" or answer == "no":
-                return False
-
-            # Otherwise just repeat
-            continue
-        except KeyboardInterrupt:
-            # Force quit
-            sys.exit(1)
-        except:
-            continue

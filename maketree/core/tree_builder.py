@@ -2,7 +2,6 @@
 based on the parsed data from the structure file. """
 
 import os
-from maketree.utils import _print
 from typing import List, Dict, Tuple
 
 

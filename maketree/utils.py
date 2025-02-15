@@ -5,7 +5,7 @@ from os.path import exists, splitext
 from pathlib import Path
 from platform import system
 from typing import List, Dict, Union, Iterable, Optional
-from maketree.terminal_colors import printc, colored
+from maketree.terminal_colors import colored
 
 
 # Windows, Darwin, Linux
@@ -253,40 +253,6 @@ def print_tree(tree: List[Dict], root: str = "."):
         },
         childs=len(tree),
     )
-
-
-def _print(
-    text: str,
-    verbose: bool = True,
-    no_color: bool = False,
-    fgcolor: Optional[str] = None,
-    bgcolor: Optional[str] = None,
-    attrs: Optional[List[str]] = None,
-    *,
-    end: str = "\n",
-):
-    """
-    ### Print
-    Custom print function that prints `text`.
-
-    #### : ARGS:
-    - `text`: the text to print
-    - `verbose`: decides whether to print it (useful with VERBOSE bool)
-    - `no_color`: decides whether to print colored text (useful with NO_COLOR bool)
-    - `fgcolor`: foreground color of text
-    - `bgcolor`: background color of text
-    - `attrs`: attributes to apply to text
-    """
-    if not verbose:
-        return
-
-    if no_color:
-        print(text)
-        return
-
-    # printc(text, fgcolor, bgcolor, attrs)
-    print(colored(text, fgcolor, bgcolor, attrs), end=end)
-
 
 def create_dir(path: str):
     """Create a folder/directory on the filesystem."""
