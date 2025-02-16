@@ -80,12 +80,12 @@ def main():
 
     # Print the graphical tree and Exit.
     if PRINT_TREE:
-        print_tree(parsed_tree)
+        print_tree(parsed_tree, root=dstpath, console=console)
         sys.exit(0)
 
     # Confirm before proceeding
     if not NO_CONFIRM:
-        print_tree(parsed_tree, dstpath)
+        print_tree(parsed_tree, root=dstpath, console=console)
         proceed: bool = console.input_confirm(
             "Create this structure? (y/N): ", fgcolor="light_magenta"
         )
