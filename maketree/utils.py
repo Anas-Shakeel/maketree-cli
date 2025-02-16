@@ -254,12 +254,12 @@ def print_tree(tree: List[Dict], root: str = "."):
         childs=len(tree),
     )
 
+
 def create_dir(path: str):
     """Create a folder/directory on the filesystem."""
-    valid = is_valid_dirpath(path)
-    if valid is not True:
-        return valid
-
     # Create folder
-    makedirs(path, exist_ok=True)
-    return True
+    try:
+        makedirs(path, exist_ok=True)
+        return True
+    except Exception as e:
+        return str(e)
