@@ -36,6 +36,16 @@ def main():
     # Console? (is this fuc**ing Yavascript?)
     console = Console(VERBOSE, NO_COLORS)
 
+    # Mutually Exclusive
+    if OVERWRITE and SKIP:
+        console.error(
+            console.color_substrs(
+                "Options --overwrite and --skip are mutually exlusive. ",
+                ["--overwrite", "--skip"],
+                "light_yellow",
+            )
+        )
+
     # SRC Exists?
     if not sourcefile.exists():
         console.error("source '%s' does not exist." % sourcefile)
@@ -53,16 +63,12 @@ def main():
                 console.error(created)
         else:
             console.error(
-                "destination path '%s' does not exist."
-                % colored(str(dstpath), "light_red"),
+                console.color_substrs(
+                    "destination path '%s' does not exist." % dstpath,
+                    [dstpath],
+                    "light_red",
+                )
             )
-
-    # Mutually Exclusive
-    if OVERWRITE and SKIP:
-        console.error(
-            "Options --overwrite and --skip are mutually exlusive. "
-            "(use one or the other, not both)"
-        )
 
     # Parse the source file
     console.verbose("Parsing %s..." % sourcefile)
@@ -92,8 +98,8 @@ def main():
 
     # If Overwrite and Skip both are false
     if not OVERWRITE and not SKIP:
-        console.verbose("Checking existing paths...")
         # Check existing paths
+        console.verbose("Checking existing paths...")
         existing_paths = get_existing_paths(paths["files"])
         count = len(existing_paths)
 
@@ -103,13 +109,14 @@ def main():
                 existing_paths,
                 "Warning: File already exists: ",
                 color="light_yellow",
+                force_print=False,
             )
             console.error(
-                f"Found {count} existing files, cannot proceed. "
-                "(try %s or %s)"
-                % (
-                    colored("--skip", "light_yellow"),
-                    colored("--overwrite", "light_yellow"),
+                console.color_substrs(
+                    f"Found {count} existing files, cannot proceed. "
+                    "(try --skip or --overwrite)",
+                    ["--skip", "--overwrite"],
+                    "light_yellow",
                 )
             )
 
@@ -121,19 +128,19 @@ def main():
         console,
         skip=SKIP,
         overwrite=OVERWRITE,
-        verbose=VERBOSE,
-        no_color=NO_COLORS,
     )
 
     # Completion message
-    if not NO_COLORS:
-        built_dirs = colored(f"{build_count[0]} directories", "light_green")
-        built_files = colored(f"{build_count[1]} files", "light_green")
-    else:
-        built_dirs = f"{build_count[0]} directories"
-        built_files = f"{build_count[1]} files"
+    built_dirs = f"{build_count[0]} directories"
+    built_files = f"{build_count[1]} files"
 
-    print(f"\n{built_dirs} and {built_files} have been created.")
+    print(
+        console.color_substrs(
+            f"\n{built_dirs} and {built_files} have been created.",
+            [built_dirs, built_files],
+            "light_green",
+        )
+    )
 
 
 def parse_args():
