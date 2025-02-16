@@ -96,6 +96,8 @@ class Console:
         prefix: str = "",
         suffix: str = "",
         color: Optional[str] = None,
+        *,
+        force_print: bool = False,
     ):
         """
         Print lines (list of strings).
@@ -105,11 +107,13 @@ class Console:
         - `prefix`: prefix string to add at the start of each line
         - `suffix`: suffix string to add at the end of each line
         - `color`: foreground color of strings
+        - `force_print`: decides whether to print, or leave it to VERBOSE
         """
         for line in lines:
             self.print(
                 "%s%s%s" % (prefix, line, suffix),
                 fgcolor=color,
+                force_print=force_print,
             )
 
     def input_confirm(self, message: str, fgcolor: Optional[str] = None) -> bool:
