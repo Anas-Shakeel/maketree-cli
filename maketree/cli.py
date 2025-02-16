@@ -9,6 +9,7 @@ from maketree.core.normalizer import Normalizer
 from maketree.terminal_colors import colored
 from maketree.console import Console
 from maketree.utils import (
+    is_valid_dirpath,
     get_existing_paths,
     print_tree,
     create_dir,
@@ -57,10 +58,10 @@ def main():
     # DST Exists?
     if not dstpath.is_dir():
         if CREATE_DST:
-            console.verbose("Creating '%s'..." % dstpath)
-            created = create_dir(dstpath)
-            if created is not True:
-                console.error(created)
+            console.verbose("Validating '%s'..." % dstpath)
+            valid = is_valid_dirpath(dstpath)
+            if valid is not True:
+                console.error(valid)
         else:
             console.error(
                 console.color_substrs(
@@ -120,7 +121,13 @@ def main():
                 )
             )
 
-    console.verbose("Creating tree on filesystem...\n")
+    # Create dstpath here...
+    console.verbose("Creating '%s'..." % dstpath)
+    created = create_dir(dstpath)
+    if created is not True:
+        console.error(created)
+
+    console.verbose("Creating tree in '%s'..." % dstpath)
 
     # Create the files and dirs finally
     build_count = TreeBuilder.build(
