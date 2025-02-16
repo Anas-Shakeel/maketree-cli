@@ -6,6 +6,7 @@ from pathlib import Path
 from platform import system
 from typing import List, Dict, Union, Iterable, Optional
 from maketree.terminal_colors import colored
+from maketree.console import Console
 
 
 # Windows, Darwin, Linux
@@ -209,12 +210,12 @@ def contains_chars(string: str, chars: str) -> bool:
     return any(char for char in chars if char in string)
 
 
-def print_tree(tree: List[Dict], root: str = "."):
+def print_tree(tree: List[Dict], console: Console, root: str = "."):
     """Prints the parsed `tree` in a graphical format. _(Not perfect but, gets the job done)_"""
     tab = 0
-    BAR = "│   "
-    LINK = "├───"
-    LINK_LAST = "└───"
+    BAR = console.colored("│   ", "dark_grey")
+    LINK = console.colored("├───", "dark_grey")
+    LINK_LAST = console.colored("└───", "dark_grey")
     FMT_STR = f"%s%s %s"
 
     def traverse(node: Dict, childs: int):
@@ -224,10 +225,15 @@ def print_tree(tree: List[Dict], root: str = "."):
         for child in node.get("children", []):
             count += 1
 
-            # Add a Slash '/' after a directory
             child_name = child["name"]
+
+            # Add a Slash '/' after a directory
             if child["type"] == "directory":
-                child_name += "/"
+                child_name = console.colored(
+                    "%s/" % child_name,
+                    fgcolor="light_green",
+                    attrs=["italic", "bold"],
+                )
 
             if count == childs:
                 # Last Child
@@ -242,13 +248,19 @@ def print_tree(tree: List[Dict], root: str = "."):
         tab -= 1
         return
 
-    # Root dot.
-    print(root)
+    root = str(root) if str(root) == "." else f"{root}/"
+    print(
+        console.colored(
+            root,
+            fgcolor="light_green",
+            attrs=["italic", "bold"],
+        )
+    )
 
     traverse(
         node={
             "type": "directory",
-            "name": ".",
+            "name": root,
             "children": tree,
         },
         childs=len(tree),
