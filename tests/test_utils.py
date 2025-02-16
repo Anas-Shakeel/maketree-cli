@@ -43,7 +43,11 @@ def test_get_existing_paths():
 
 
 def test_get_existing_paths():
-    os.mkdir(TEMP_DIR)
+    try:
+        os.mkdir(TEMP_DIR)
+    except FileExistsError:
+        pass
+    
     # Create First-two files in paths list.
     for p in paths[:2]:
         with open(p, "x") as _:

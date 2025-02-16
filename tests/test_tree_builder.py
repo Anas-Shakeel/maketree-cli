@@ -6,11 +6,13 @@ from os import mkdir
 from maketree.core.parser import Parser
 from maketree.core.normalizer import Normalizer
 from maketree.core.tree_builder import TreeBuilder
+from maketree.console import Console
 
 TEMP_DIR = "temp"
 
 
 def test_build():
+    console = Console(False, True)
     src = """ 
 src/
     file.txt
@@ -22,10 +24,13 @@ README.md
     paths = Normalizer.normalize(parsed_tree, rootpath=TEMP_DIR)
 
     # Make temp directory
-    mkdir(TEMP_DIR)
+    try:
+        mkdir(TEMP_DIR)
+    except FileExistsError:
+        pass
 
     # Build the tree
-    build_count = TreeBuilder.build(paths)
+    build_count = TreeBuilder.build(paths, console=console)
 
     assert build_count[0] == len(paths["directories"])
     assert build_count[1] == len(paths["files"])
