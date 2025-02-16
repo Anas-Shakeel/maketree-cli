@@ -31,29 +31,58 @@ class Console:
 
     def error(self, message: str):
         """Print `message` and exit with status `1`. Use for errors only."""
-        print(colored("Error:", self.clr_error, attrs=["bold"]), message)
+        self.print(
+            self.color_substrs(
+                "Error: %s" % message,
+                ["Error:"],
+                self.clr_error,
+            ),
+            force_print=True,
+        )
         sys.exit(1)
 
     def info(self, message: str):
         """Print `message`. Use for informational messages."""
-        # print(colored("[INFO]", self.clr_info, attrs=["bold"]), message)
-        printc(message, self.clr_info)
+        self.print(
+            self.color_substrs(
+                "[INFO] %s" % message,
+                ["[INFO]"],
+                self.clr_info,
+            ),
+            force_print=True,
+        )
 
     def verbose(self, message: str):
         """Print `message`. Use for verbose messages."""
-        if self.VERBOSE:
-            print(colored("[INFO]", self.clr_info, attrs=["bold"]), message)
-        # printc(message, self.clr_info)
+        self.print(
+            self.color_substrs(
+                "[INFO] %s" % message,
+                ["[INFO]"],
+                self.clr_info,
+            ),
+        )
 
     def warning(self, message: str):
         """Print `message`. Use for warning messages."""
-        print(colored("Warning:", self.clr_warning, attrs=["bold"]), message)
-        # printc(message, self.clr_warning)
+        self.print(
+            self.color_substrs(
+                "Warning: %s" % message,
+                ["Warning:"],
+                self.clr_warning,
+            ),
+            force_print=True,
+        )
 
     def success(self, message: str):
         """Print `message`. Use for success messages."""
-        print(colored("Success:", self.clr_success, attrs=["bold"]), message)
-        # printc(message, self.clr_success)
+        self.print(
+            self.color_substrs(
+                "Success: %s" % message,
+                ["Success:"],
+                self.clr_success,
+            ),
+            force_print=True,
+        )
 
     def print(
         self,
