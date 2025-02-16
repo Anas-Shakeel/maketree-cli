@@ -130,3 +130,31 @@ class Console:
                 sys.exit(1)
             except:
                 continue
+
+    def color_substrs(
+        self,
+        text: str,
+        substrs: List[str],
+        fgcolor: Optional[str] = None,
+    ):
+        """
+        ### Color Substrings
+        Color all sub-strings in `text` and return the colored text.
+
+        #### ARGS:
+        - `text`: text to color
+        - `substrs`: list of sub-strings
+        - `fgcolor`: foreground color of substrings
+
+        """
+        if self.NO_COLOR:
+            return text
+
+        colored_text = text
+        for string in substrs:
+            colored_text = colored_text.replace(
+                str(string),
+                colored(str(string), fgcolor),
+            )
+
+        return colored_text
