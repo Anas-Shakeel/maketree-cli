@@ -111,7 +111,7 @@ class Console:
             return
 
         if self.NO_COLOR:
-            print(text)
+            print(text, sep=sep, end=end, flush=flush)
             return
 
         print(colored(text, fgcolor, bgcolor, attrs), sep=sep, end=end, flush=flush)
