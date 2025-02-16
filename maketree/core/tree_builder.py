@@ -3,6 +3,7 @@ based on the parsed data from the structure file. """
 
 import os
 from typing import List, Dict, Tuple
+from maketree.console import Console
 
 
 class TreeBuilder:
@@ -12,11 +13,9 @@ class TreeBuilder:
     def build(
         cls,
         paths: Dict[str, List[str]],
-        console,
+        console: Console,
         skip: bool = False,
         overwrite: bool = False,
-        verbose: bool = False,
-        no_color: bool = False,
     ) -> Tuple[int, int]:
         """
         ### Build
