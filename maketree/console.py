@@ -188,3 +188,17 @@ class Console:
             )
 
         return colored_text
+
+    def colored(
+        self,
+        text: str,
+        fgcolor: str = None,
+        bgcolor: str = None,
+        attrs: List[str] = None,
+    ) -> str:
+        """Colorize and return text. Returns text without
+        color if `NO_COLOR` is `True`."""
+        if self.NO_COLOR:
+            return text
+
+        return colored(text, fgcolor, bgcolor, attrs)
