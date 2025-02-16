@@ -78,10 +78,7 @@ class Console:
         - `attrs`: attributes to apply to text
         - `force_print`: overrides VERBOSE, force prints text
         """
-        # if not force_print:
-        #     if not self.VERBOSE:
-        #         return
-        if not force_print and not self.verbose:
+        if not force_print and not self.VERBOSE:
             return
 
         if self.NO_COLOR:
