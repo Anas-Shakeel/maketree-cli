@@ -100,10 +100,9 @@ def main():
     # If Overwrite and Skip both are false
     if not OVERWRITE and not SKIP:
         # Check existing paths
-        console.verbose("Checking existing paths...")
+        console.verbose("Checking existing paths...\n")
         existing_paths = get_existing_paths(paths["files"])
         count = len(existing_paths)
-
         # Any path exists?
         if count:
             console.print_lines(
@@ -112,6 +111,7 @@ def main():
                 color="light_yellow",
                 force_print=False,
             )
+            print()
             console.error(
                 console.color_substrs(
                     f"Found {count} existing files, cannot proceed. "
@@ -127,7 +127,7 @@ def main():
     if created is not True:
         console.error(created)
 
-    console.verbose("Creating tree in '%s'..." % dstpath)
+    console.verbose("Creating tree in '%s'...\n" % dstpath)
 
     # Create the files and dirs finally
     build_count = TreeBuilder.build(
