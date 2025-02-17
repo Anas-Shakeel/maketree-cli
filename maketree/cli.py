@@ -18,7 +18,7 @@ from typing import List, Dict, Tuple
 
 
 PROGRAM = "maketree"
-VERSION = "1.0.2"
+VERSION = "1.1.0"
 
 
 def main():
@@ -157,7 +157,7 @@ def parse_args():
         prog=PROGRAM,
         usage="%(prog)s [OPTIONS]",
         epilog="%s %s" % (PROGRAM.title(), VERSION),
-        description="Create project structures effortlessly.",
+        description="Create complex project structures effortlessly.",
     )
 
     parser.add_argument("src", help="source file (with .tree extension)")
@@ -196,7 +196,7 @@ def parse_args():
         help="don't ask for confirmation",
     )
     parser.add_argument(
-        "-v", "--verbose", action="store_true", help="increase verbosity"
+        "-v", "--verbose", action="store_true", help="enable verbose mode"
     )
 
     return parser.parse_args()
