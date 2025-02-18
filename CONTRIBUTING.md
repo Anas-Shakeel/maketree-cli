@@ -35,21 +35,35 @@ There are several ways to contribute to Maketree:
 2. **Clone Your Fork:**
 
     ```sh
-    git clone https://github.com/your-username/maketree-cli.git
+    git clone https://github.com/anas-shakeel/maketree-cli.git
     cd ./maketree-cli
     ```
 
 3. **Create Virtual Environment: (Optional)**  
-   It's always good practice to create a virtual environment before working on a project.
+   It's always good practice to create a virtual environment before working on a python project.
+
+    **Windows**
 
     ```sh
-    python -m venv .venv
+    python -m venv venv
     ```
 
-    Then activate the environment: **(Windows)**
+    Then activate with this command:
 
     ```sh
-    .venv/Scripts/activate
+    venv\Scripts\activate
+    ```
+
+    **Linux/Mac**
+
+    ```sh
+    python3 -m venv venv
+    ```
+
+    Activate with this command:
+
+    ```sh
+    source venv/bin/activate
     ```
 
 4. **Install Dev Dependencies:**  
@@ -71,7 +85,6 @@ There are several ways to contribute to Maketree:
     ```sh
     python ./maketree -h
     ```
-    The whole `maketree/` directory acts as a module/package.
 
 ### Coding Guidelines
 
@@ -85,14 +98,14 @@ There are several ways to contribute to Maketree:
 -   **Testing:**  
     All contributions must include tests (if applicable) and pass our test suite.
 
--   **Run tests using pytest:**
+    Run tests using `pytest` in the root directory:
 
     ```sh
     pytest
     ```
 
--   Make sure all tests pass locally before opening a pull request.
--   Feel free to add or update unit tests if you are adding new features or fixing bugs.
+    Make sure all tests pass locally before opening a pull request.
+    Feel free to add or update unit tests if you are adding new features or fixing bugs.
 
 -   **Documentation:**  
     If your changes affect the usage of Maketree, please update the documentation accordingly.
@@ -115,17 +128,6 @@ There are several ways to contribute to Maketree:
     - Navigate to the GitHub repository and open a pull request from your branch.
     - Provide a clear description of the changes.
     - Reference any related issues.
-    - I will review your pull request and provide feedback.
-
-### Additional Notes
-
--   **Best Practices:**  
-    Follow industry-standard best practices for coding, testing, and documentation.
-
--   **Need Help?**  
-    If you have questions about contributing or need assistance, please open an issue.
-
--   **Code of Conduct:**  
-    While I don't have a dedicated Code of Conduct file at this time, I expect all contributors to behave respectfully and constructively.
+    - I/we will review your pull request and provide feedback.
 
 Thank you for contributing to Maketree! Your efforts help create a better tool for everyone.
