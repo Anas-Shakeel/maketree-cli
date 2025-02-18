@@ -1,4 +1,4 @@
-""" Entry point of the project (to run directly, without installing) """
+"""Entry point of the project (to run directly, without installing)"""
 
 import os
 import sys

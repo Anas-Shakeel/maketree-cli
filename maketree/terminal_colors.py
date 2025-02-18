@@ -1,4 +1,4 @@
-""" Responsible for coloring the text (ANSI stuff) """
+"""Responsible for coloring the text (ANSI stuff)"""
 
 from typing import List
 

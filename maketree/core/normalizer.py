@@ -1,4 +1,4 @@
-""" Normalizes the parsed tree and creates paths. """
+"""Normalizes the parsed tree and creates paths."""
 
 from os.path import join as join_path
 from typing import List, Dict

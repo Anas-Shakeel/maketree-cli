@@ -1,4 +1,4 @@
-""" Tests for maketree/core/tree_builder.py """
+"""Tests for maketree/core/tree_builder.py"""
 
 import shutil
 from os.path import exists

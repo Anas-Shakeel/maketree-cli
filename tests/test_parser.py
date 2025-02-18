@@ -1,4 +1,4 @@
-""" Tests for maketree/core/parser.py """
+"""Tests for maketree/core/parser.py"""
 
 from maketree.core.parser import Parser
 

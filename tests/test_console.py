@@ -1,4 +1,4 @@
-""" Tests for maketree/console.py """
+"""Tests for maketree/console.py"""
 
 from maketree.console import Console
 

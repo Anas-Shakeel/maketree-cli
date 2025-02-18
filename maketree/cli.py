@@ -1,4 +1,4 @@
-""" Frontend of the project (Argument handling and stuff) """
+"""Frontend of the project (Argument handling and stuff)"""
 
 import sys
 from pathlib import Path

@@ -1,4 +1,4 @@
-""" Tests for maketree/utils.py """
+"""Tests for maketree/utils.py"""
 
 import os
 import shutil
@@ -47,7 +47,7 @@ def test_get_existing_paths():
         os.mkdir(TEMP_DIR)
     except FileExistsError:
         pass
-    
+
     # Create First-two files in paths list.
     for p in paths[:2]:
         with open(p, "x") as _:

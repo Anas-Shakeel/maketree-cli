@@ -1,4 +1,4 @@
-""" Tests for maketree/core/normalizer.py """
+"""Tests for maketree/core/normalizer.py"""
 
 from os.path import normpath
 from maketree.core.normalizer import Normalizer

@@ -1,1 +1,1 @@
-""" Core functionality of the project (Parsing, Validating, Building the structues) """
+"""Core functionality of the project (Parsing, Validating, Building the structues)"""

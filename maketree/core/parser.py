@@ -1,5 +1,5 @@
-"""  Responsible for reading and parsing the structure file (in `.tree` format),
-that users provide to define the directory structure. """
+"""Responsible for reading and parsing the structure file (in `.tree` format),
+that users provide to define the directory structure."""
 
 from maketree.utils import is_valid_dir, is_valid_file
 from typing import List

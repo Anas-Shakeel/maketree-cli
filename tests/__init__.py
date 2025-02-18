@@ -1,1 +1,1 @@
-""" Contains tests for the project """
+"""Contains tests for the project"""

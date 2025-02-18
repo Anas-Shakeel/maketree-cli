@@ -1,4 +1,4 @@
-""" Tests for maketree/terminal_colors.py """
+"""Tests for maketree/terminal_colors.py"""
 
 from pytest import raises
 from maketree.terminal_colors import colored, get_color

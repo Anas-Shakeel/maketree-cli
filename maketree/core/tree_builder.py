@@ -1,5 +1,5 @@
-""" Contains logic for creating the directory structure on the file system,
-based on the parsed data from the structure file. """
+"""Contains logic for creating the directory structure on the file system,
+based on the parsed data from the structure file."""
 
 import os
 from typing import List, Dict, Tuple, Optional
@@ -13,7 +13,7 @@ class TreeBuilder:
     def build(
         cls,
         paths: Dict[str, List[str]],
-        console: Optional[Console]=None,
+        console: Optional[Console] = None,
         skip: bool = False,
         overwrite: bool = False,
     ) -> Tuple[int, int]:
