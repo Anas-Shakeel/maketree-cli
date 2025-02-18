@@ -1,0 +1,74 @@
+name: Build and Release Maketree Binaries
+
+on:
+  push:
+    tags:
+      - "v*"  # Trigger only when a new tag is pushed
+
+permissions:
+  contents: write  # Required for creating releases and uploading assets
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Dependencies
+        run: pip install pyinstaller
+
+      - name: Build Executable
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}  # Extract version from tag (e.g., v1.2.0)
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            pyinstaller --onefile --name cliapp cliapp/__main__.py
+            mv dist/cliapp.exe cliapp-${VERSION}-windows.exe
+          elif [[ "$RUNNER_OS" == "macOS" ]]; then
+            pyinstaller --onefile --name cliapp cliapp/__main__.py
+            mv dist/cliapp cliapp-${VERSION}-macos
+          else
+            pyinstaller --onefile --name cliapp cliapp/__main__.py
+            mv dist/cliapp cliapp-${VERSION}-linux
+          fi
+        shell: bash
+
+      - name: Upload Binary as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cliapp-${{ github.ref_name }}-${{ runner.os }}
+          path: |
+            cliapp-*
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub Release & Upload Assets
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: cliapp ${{ github.ref_name }}  # Release title format: cliapp v1.2.0
+          generate_release_notes: true
+          draft: true
+          prerelease: false
+          files: artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure correct token usage
