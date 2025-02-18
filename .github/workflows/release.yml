@@ -32,23 +32,23 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/}  # Extract version from tag (e.g., v1.2.0)
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            pyinstaller --onefile --name cliapp cliapp/__main__.py
-            mv dist/cliapp.exe cliapp-${VERSION}-windows.exe
+            pyinstaller --onefile --name maketree maketree/__main__.py
+            mv dist/maketree.exe maketree-${VERSION}-windows.exe
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            pyinstaller --onefile --name cliapp cliapp/__main__.py
-            mv dist/cliapp cliapp-${VERSION}-macos
+            pyinstaller --onefile --name maketree maketree/__main__.py
+            mv dist/maketree maketree-${VERSION}-macos
           else
-            pyinstaller --onefile --name cliapp cliapp/__main__.py
-            mv dist/cliapp cliapp-${VERSION}-linux
+            pyinstaller --onefile --name maketree maketree/__main__.py
+            mv dist/maketree maketree-${VERSION}-linux
           fi
         shell: bash
 
       - name: Upload Binary as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cliapp-${{ github.ref_name }}-${{ runner.os }}
+          name: maketree-${{ github.ref_name }}-${{ runner.os }}
           path: |
-            cliapp-*
+            maketree-*
           if-no-files-found: error
 
   release:
@@ -65,9 +65,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: cliapp ${{ github.ref_name }}  # Release title format: cliapp v1.2.0
+          name: Maketree ${{ github.ref_name }}  # Release title format: Maketree v1.2.0
           generate_release_notes: true
-          draft: true
+          draft: true # Draft the release
           prerelease: false
           files: artifacts/**/*
         env:
