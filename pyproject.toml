@@ -8,26 +8,38 @@ Source = "https://github.com/anas-shakeel/maketree-cli"
 
 [project]
 name = "maketree"
-version = "1.0.2"
-description = "A CLI tool to create directory structures from a structure file."
+version = "1.1.0"
+description = "Create complex project structures effortlessly."
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
     { name = "Anas Shakeel", email = "srdranas456@gmail.com" }
 ]
 requires-python = ">=3.8"
-keywords = ["cli", "directory", "automation", "file-system"]
+keywords = [
+    "python",
+    "cli",
+    "directory",
+    "structures",
+    "automation", 
+    "file-system",
+    "scaffolding", 
+    "developer-tool", 
+    "productivity"
+]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Utilities"
 ]
 dependencies = []
