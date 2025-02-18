@@ -32,10 +32,10 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/}  # Extract version from tag (e.g., v1.2.0)
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            pyinstaller --onefile --name maketree maketree/__main__.py
+            pyinstaller --onefile --name maketree --icon=assets/icon.ico maketree/__main__.py
             mv dist/maketree.exe maketree-${VERSION}-windows.exe
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
-            pyinstaller --onefile --name maketree maketree/__main__.py
+            pyinstaller --onefile --name maketree --icon=assets/icon.icns maketree/__main__.py
             mv dist/maketree maketree-${VERSION}-macos
           else
             pyinstaller --onefile --name maketree maketree/__main__.py
