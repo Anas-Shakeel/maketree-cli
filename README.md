@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Anas-Shakeel/maketree-cli/main/assets/header.jpg" />
+</p>
+
 # Maketree CLI
 
 [![GitHub Repository](https://img.shields.io/badge/-GitHub-%230D0D0D?logo=github&labelColor=gray)](https://github.com/anas-shakeel/maketree-cli)
