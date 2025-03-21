@@ -411,7 +411,7 @@ You can install **Maketree** via pip. _(for python developers)_
 pip install maketree
 ```
 
-Or download the executable for your OS from [Releases page](https://github.com/anas-shakeel/maketree-cli/releases/).
+Or download the executable for your OS from [Releases page](https://github.com/anas-shakeel/maketree-cli/releases/latest/).
 
 #### ❓ How do I use Maketree to generate a project structure?
 
