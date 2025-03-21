@@ -275,3 +275,55 @@ def create_dir(path: str):
         return True
     except Exception as e:
         return str(e)
+
+
+def incremented_filename(filepath: Union[Path, str], dst_path: str = "") -> str:
+    """
+    ### Incremented Filename
+    Increments filename in the `filepath` if file already exists in `dst_path`.
+
+    if `dst_path` is omitted, method will use the `filepath`'s root dir to look
+    if filename exists or not.
+
+    ```
+    >> incremented_filename("path/to/file.txt")
+    # IF File already exists
+    'path/to/file_1.txt'
+
+    # Otherwise
+    'path/to/file.txt'
+    ```
+    """
+    filepath = Path(filepath)
+
+    # Exists? return if not
+    if not filepath.exists():
+        return str(filepath)
+
+    # Set root path
+    if dst_path == "":
+        # DST_PATH omitted?, use file's path
+        root = filepath.parent
+    else:
+        root = dst_path
+
+    # Convert root to Path Object
+    root = Path(root)
+
+    # Extract filename and extension
+    filename = filepath.stem
+    extension = filepath.suffix
+
+    # Create new_name
+    new_name = root / (filename + extension)
+
+    # File exists?
+    if new_name.exists():
+        num = 1
+        while True:
+            new_name = f"{root / filename}_{num}{extension}"
+            if not exists(new_name):
+                return new_name
+            num += 1
+    else:
+        return str(new_name)
