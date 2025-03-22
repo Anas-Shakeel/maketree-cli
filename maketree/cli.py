@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
+from maketree.core.extractor import Extractor
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
 from maketree.terminal_colors import colored
@@ -24,9 +25,10 @@ VERSION = "1.1.0"
 def main():
     args = parse_args()
 
-    sourcefile = Path(args.src)
+    sourcefile = args.src
     dstpath = Path(args.dst)
     CREATE_DST = args.create_dst
+    EXTRACT_TREE = args.extract_tree
     VERBOSE: bool = args.verbose
     OVERWRITE: bool = args.overwrite
     SKIP: bool = args.skip
@@ -46,6 +48,36 @@ def main():
                 "light_yellow",
             )
         )
+
+    if not sourcefile:
+        # Extract tree into a file
+        if EXTRACT_TREE:
+            extract_tree_path = Path(EXTRACT_TREE)
+            # Exists?
+            if extract_tree_path.exists():
+                filename = Extractor.extract(extract_tree_path, console=console)
+                # console.success()
+                print(
+                    console.color_substrs(
+                        f"Tree has been extracted into '{filename}'",
+                        [filename],
+                        "light_green",
+                    )
+                )
+
+                return
+            else:
+                # Show error and quit
+                console.error(
+                    f"the following path does not exist: '{extract_tree_path}'"
+                )
+
+        else:
+            # Show error and quit
+            console.error("the following argument is required: src")
+
+    # Convert to Path object
+    sourcefile = Path(sourcefile)
 
     # SRC Exists?
     if not sourcefile.exists():
@@ -160,7 +192,11 @@ def parse_args():
         description="Create complex project structures effortlessly.",
     )
 
-    parser.add_argument("src", help="source file (with .tree extension)")
+    parser.add_argument(
+        "src",
+        nargs="?",
+        help="source file (with .tree extension)",
+    )
     parser.add_argument(
         "dst",
         nargs="?",
@@ -172,6 +208,12 @@ def parse_args():
         "--create-dst",
         action="store_true",
         help="create destination folder if it doesn't exist.",
+    )
+    parser.add_argument(
+        "-et",
+        "--extract-tree",
+        metavar="",
+        help="write directory tree into a .tree file. (takes a PATH)",
     )
     parser.add_argument(
         "-g",
