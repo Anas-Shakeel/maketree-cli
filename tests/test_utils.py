@@ -26,7 +26,7 @@ paths = [
 ]
 
 
-def test_get_existing_paths():
+def test_get_non_existing_paths():
     os.mkdir(TEMP_DIR)
 
     # Create first-two files in paths list.
