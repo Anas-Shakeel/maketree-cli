@@ -7,7 +7,6 @@ from maketree.core.parser import Parser, ParseError
 from maketree.core.extractor import Extractor
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
-from maketree.terminal_colors import colored
 from maketree.console import Console
 from maketree.utils import (
     is_valid_dirpath,
@@ -15,7 +14,7 @@ from maketree.utils import (
     print_tree,
     create_dir,
 )
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 
 PROGRAM = "maketree"
