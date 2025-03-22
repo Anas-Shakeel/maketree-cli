@@ -7,6 +7,7 @@ from platform import system
 from typing import List, Dict, Union, Iterable, Optional
 from maketree.terminal_colors import colored
 from maketree.console import Console
+from datetime import datetime
 
 
 # Windows, Darwin, Linux
@@ -327,3 +328,45 @@ def incremented_filename(filepath: Union[Path, str], dst_path: str = "") -> str:
             num += 1
     else:
         return str(new_name)
+
+def now(format_: str = "%d %B %Y %I:%M %p") -> str:
+    """
+    ### Now
+    Returns the current local date & time, formatted as `format_`.
+    This method is equivalent to `datetime.now().strftime(format_)`
+
+    #### ARGS:
+    - `format_`: the format of output datetime string
+
+    #### Format Codes:
+    - `%d` day of the month as decimal (e.g. `01, 02, ... 31`)
+    - `%j` day of the year as decimal (e.g. `001, 002, ... 366`)
+    - `%a` Weekday as locale's abbr. name (e.g. `Sun, Mon, ... Sat`)
+    - `%A` Weekday as locale's full name (e.g. `Sunday, Monday, ... Saturday`)
+    - `%w` Weekday as decimal (starting from sunday) (e.g. `0, 1, ... 6`)
+    - `%U` Week number of the year (Sunday as 1st day of week) (e.g. `00, 01, ... 53`)
+    - `%W` Week number of the year (Monday as 1st day of week) (e.g. `00, 01, ... 53`)
+    - `%b` Month as locale's abbr. name (e.g. `Jan, Feb, ... `Dec)
+    - `%B` Month as locale's full name (e.g. `January, February, ... December`)
+    - `%m` month as decimal (e.g. `01, 02, ... 12`)
+    - `%Y` year with century (e.g. `2000, 2001, ... 9999`)
+    - `%y` year without century (e.g. `00, 01, ... 99`)
+    - `%p` Locale's equivalent of either AM or PM (e.g. `AM, PM`)
+    - `%H` Hour (24-hour clock) (e.g. `00, 01, ... 23`)
+    - `%I` Hour (12-hour clock) (e.g. `01, 02, ... 12`)
+    - `%M` Minute (e.g. `00, 01, ... 59`)
+    - `%S` Second (e.g. `00, 01, ... 59`)
+    - `%f` Microsecond (6-digits) (e.g. `000000, 000001, ... 999999`)
+
+    To learn more about format codes, see  `datetime` module in Python Docs.
+
+    #### Example:
+    ```
+    >> now(format_="%I:%M %p")
+    '01:40 PM'
+
+    >> now(format_="%d %B %Y")
+    '25 September 2024'
+    ```
+    """
+    return datetime.now().strftime(format_)
