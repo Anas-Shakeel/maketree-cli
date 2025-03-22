@@ -54,13 +54,8 @@ class Console:
 
     def verbose(self, message: str):
         """Print `message`. Use for verbose messages."""
-        self.print(
-            self.color_substrs(
-                "[INFO] %s" % message,
-                ["[INFO]"],
-                self.clr_info,
-            ),
-        )
+        if self.VERBOSE:
+            print("[*] %s" % message)
 
     def warning(self, message: str):
         """Print `message`. Use for warning messages."""
