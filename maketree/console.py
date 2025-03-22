@@ -16,8 +16,8 @@ class Console:
 
     def __init__(
         self,
-        verbose,
-        no_color,
+        verbose: bool,
+        no_color: bool,
     ):
         self.VERBOSE = verbose
         self.NO_COLOR = no_color
