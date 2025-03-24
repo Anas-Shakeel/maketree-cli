@@ -86,16 +86,14 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     if not root:
         return "invalid file name"
 
-    # Check for illegal chars
     if OS == "Windows":
-        if contains_chars(root, r'\/:?*<>"|'):
-            return 'avoid these illegal characters: \\/:?*<>|"'
-    elif OS == "Darwin":
-        if contains_chars(root, r"/:<>"):
-            return "avoid these illegal characters: /:?<>"
-    else:  # Linux
-        if contains_chars(root, r"/:<>"):
-            return "avoid these illegal characters: /:?<>"
+        chars = r'\/:?*<>"|'
+    else:  # Linux & MacOS
+        chars = r"/:<>"
+
+    # # Check for illegal chars
+    if contains_chars(root, chars):
+        return "avoid these characters: %s" % chars
 
     if ext_ and not is_valid_extension(ext_):
         return "invalid file extension"
@@ -328,6 +326,7 @@ def incremented_filename(filepath: Union[Path, str], dst_path: str = "") -> str:
             num += 1
     else:
         return str(new_name)
+
 
 def now(format_: str = "%d %B %Y %I:%M %p") -> str:
     """
