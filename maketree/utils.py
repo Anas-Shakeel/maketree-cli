@@ -109,23 +109,18 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
 
     #### ARGS:
     - `dirname`: the path to validate
-
-    #### Note:
-    This function is not a stripped down version of itself. (specific to needs of the `Parser`, minimal but fast)
     """
     if not dirname:
         return "path must not be empty."
 
-    # Check for illegal chars
     if OS == "Windows":
-        if contains_chars(dirname, r'\/:?*<>"|'):
-            return 'avoid these illegal characters: \\/:?*<>|"'
-    elif OS == "Darwin":
-        if contains_chars(dirname, r"/:<>"):
-            return "avoid these illegal characters: /:?<>"
-    else:
-        if contains_chars(dirname, r"/:<>"):
-            return "avoid these illegal characters: /:?<>"
+        chars = r'\/:?*<>"|'
+    else:  # Linux & MacOS
+        chars = r"/:<>"
+
+    # Check for illegal chars
+    if contains_chars(dirname, chars):
+        return "avoid these characters: %s" % chars
 
     return True
 
