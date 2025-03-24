@@ -50,15 +50,10 @@ def is_valid_extension(extension: str) -> bool:
     if extension.count(".") > 1:
         return False
 
-    if OS == "Windows":
-        # Got Illegals?
-        if contains_chars(extension, r' \/:*?"<>|'):
-            return False
-
-    elif OS == "Darwin" and contains_chars(extension, "/:"):
+    if OS == "Windows" and contains_chars(extension, r' \/:*?"<>|'):
         return False
 
-    elif OS == "Linux" and "/" in extension:
+    elif "/" in extension:  # Linux & MacOS
         return False
 
     return True
