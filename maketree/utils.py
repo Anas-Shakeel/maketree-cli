@@ -155,20 +155,16 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
         root_parts = d.parts
 
     if sum(len(part) for part in root_parts) > max_length:
-        return (
-            f"maximum length of path can be {max_length} (excluding slashes and drive)"
-        )
+        return f"maximum length of path can be {max_length}"
+
+    if OS == "Windows":
+        chars = r'\/:?*<>"|'
+    else:  # Linux & MacOS
+        chars = r"/:<>"
 
     # Check for illegal chars
-    if OS == "Windows":
-        if _contains(root_parts, r'\/:?*<>"|'):
-            return 'avoid these characters: \\/:?*<>|"'
-    elif OS == "Darwin":
-        if _contains(root_parts, r"/:<>"):
-            return "avoid these characters: /:<>"
-    else:
-        if _contains(root_parts, r"/:<>"):
-            return "avoid these characters: /:<>"
+    if _contains(root_parts, chars):
+        return "avoid these characters: %s" % chars
 
     return True
 
