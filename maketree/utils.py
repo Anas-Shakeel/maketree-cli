@@ -1,17 +1,17 @@
 """Contains Helper code to keep core logic clean. (things that don't fit anywhere, fit here)"""
 
+from sys import platform
 from os import makedirs
 from os.path import exists, splitext
 from pathlib import Path
-from platform import system
 from typing import List, Dict, Union, Iterable, Optional
 from maketree.terminal_colors import colored
 from maketree.console import Console
 from datetime import datetime
 
 
-# Windows, Darwin, Linux
-OS: str = system()
+# win32, linux, darwin
+OS: str = platform
 
 
 def get_nonexisting_paths(paths: List[str]) -> List[str]:
@@ -50,7 +50,7 @@ def is_valid_extension(extension: str) -> bool:
     if extension.count(".") > 1:
         return False
 
-    if OS == "Windows" and contains_chars(extension, r' \/:*?"<>|'):
+    if OS == "win32" and contains_chars(extension, r' \/:*?"<>|'):
         return False
 
     elif "/" in extension:  # Linux & MacOS
@@ -81,7 +81,7 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     if not root:
         return "invalid file name"
 
-    if OS == "Windows":
+    if OS == "win32":
         chars = r'\/:?*<>"|'
     else:  # Linux & MacOS
         chars = r"/:<>"
@@ -108,7 +108,7 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     if not dirname:
         return "path must not be empty."
 
-    if OS == "Windows":
+    if OS == "win32":
         chars = r'\/:?*<>"|'
     else:  # Linux & MacOS
         chars = r"/:<>"
@@ -149,7 +149,7 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
     d = Path(dirpath)
     if d.drive:
         root_parts = d.parts[1:]
-    elif OS == "Linux" and (d.parts and d.parts[0] == "/"):
+    elif OS == "linux" and (d.parts and d.parts[0] == "/"):
         root_parts = d.parts[1:]
     else:
         root_parts = d.parts
@@ -157,7 +157,7 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
     if sum(len(part) for part in root_parts) > max_length:
         return f"maximum length of path can be {max_length}"
 
-    if OS == "Windows":
+    if OS == "win32":
         chars = r'\/:?*<>"|'
     else:  # Linux & MacOS
         chars = r"/:<>"
