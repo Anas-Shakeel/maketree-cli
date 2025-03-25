@@ -24,7 +24,6 @@ class Parser:
     @classmethod
     def _parse_lines(cls, lines: List[str]):
         """Parse `lines` into tree structure"""
-
         stack = []  # Keep track of parent dirs
         tree = []  # Final parsed tree (list of dicts)
 
@@ -40,8 +39,10 @@ class Parser:
 
             if line.endswith("/"):  # Its a Directory
                 item = {
+                    "name": line.strip()[:-1],  # Remove `/` too
                     "type": "directory",
-                    "name": line.strip().rstrip("/"),
+                    "line": i + 1,
+                    "indent": indent_level,
                     "children": [],
                 }
 
@@ -67,7 +68,12 @@ class Parser:
                 stack.append({"item": item, "indent_level": indent_level})
 
             else:  # Its a File
-                item = {"type": "file", "name": line.strip()}
+                item = {
+                    "name": line.strip(),
+                    "type": "file",
+                    "line": i + 1,
+                    "indent": indent_level,
+                }
 
                 # Validate file name
                 valid = is_valid_file(item["name"])
