@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
+from maketree.core.validator import Validator
 from maketree.core.extractor import Extractor
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
@@ -104,10 +105,11 @@ def main():
 
     # Parse the source file
     console.verbose("Parsing %s..." % sourcefile)
-    try:
-        parsed_tree = Parser.parse_file(sourcefile)
-    except ParseError as e:
-        console.error(e)
+    parsed_tree = Parser.parse_file(sourcefile)
+
+    # Validate the parsed tree (Does nothing on Pass, Exits on fail)
+    console.verbose("Validating parsed tree...")
+    Validator.validate(parsed_tree, console=console)
 
     # Print the graphical tree and Exit.
     if PRINT_TREE:
