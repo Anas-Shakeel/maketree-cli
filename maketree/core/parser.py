@@ -46,13 +46,6 @@ class Parser:
                     "children": [],
                 }
 
-                # Validate dir name
-                valid = is_valid_dir(item["name"])
-                if valid is not True:
-                    raise ParseError(
-                        "at line %d, in '%s', %s" % (i + 1, item["name"], valid)
-                    )
-
                 # Pop from stack til the correct parent
                 while stack and stack[-1]["indent_level"] >= indent_level:
                     stack.pop()
@@ -74,13 +67,6 @@ class Parser:
                     "line": i + 1,
                     "indent": indent_level,
                 }
-
-                # Validate file name
-                valid = is_valid_file(item["name"])
-                if valid is not True:
-                    raise ParseError(
-                        "at line %d, in '%s', %s" % (i + 1, item["name"], valid)
-                    )
 
                 # Pop from stack til the correct parent
                 while stack and stack[-1]["indent_level"] >= indent_level:
