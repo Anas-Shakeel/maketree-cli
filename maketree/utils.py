@@ -115,6 +115,8 @@ def is_valid_file(filename: str) -> Union[bool, str]:
 
     This methods is cross-platform. (more or less)
     """
+    filename = filename.strip()
+
     # Disallow empty filenames
     if not filename:
         return "file name must not be empty"
@@ -129,12 +131,13 @@ def is_valid_file(filename: str) -> Union[bool, str]:
 
     # Disallow Windows-Reserved names
     if platform == "win32":
-        for name in RESERVED_WINDOWS_NAMES:
-            if name in filename.upper():
-                return "%s is reserved on Windows" % name
+        # Extract filename (not extension)
+        name_ = filename.rsplit(".", maxsplit=1)[0]
+        if name_.upper() in RESERVED_WINDOWS_NAMES:
+            return "%s is reserved on Windows" % name_
 
     # Validate characters (disallow special chars)
-    if not bool(re.match(FILENAME_REGEX, filename.strip())):
+    if not re.match(FILENAME_REGEX, filename.strip()):
         return 'contains invalid characters: avoid these <:"/\\|?*\\0\\t\\r\\n>'
 
     # All checks passed
