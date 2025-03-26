@@ -148,43 +148,6 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     return True
 
 
-def is_valid_file_legacy(filename: str) -> Union[bool, str]:
-    """
-    ### Is Valid File
-    Validates filename. Returns `True` if valid, Returns `str` if invalid.
-    This `str` is the cause of filename invalidation.
-
-    #### ARGS:
-    - `filename`: name of the file
-
-    #### Note:
-    This function is not a stripped down version of itself. (specific to needs of the `Parser`, minimal but fast)
-    """
-    if not filename:
-        return "file name must not be empty"
-
-    # Split filepath into root and extension
-    root, ext_ = splitext(filename)
-
-    # Root must not be empty
-    if not root:
-        return "invalid file name"
-
-    if platform == "win32":
-        chars = r'\/:?*<>"|'
-    else:  # Linux & MacOS
-        chars = r"/:<>"
-
-    # # Check for illegal chars
-    if contains_chars(root, chars):
-        return "avoid these characters: %s" % chars
-
-    if ext_ and not is_valid_extension(ext_):
-        return "invalid file extension"
-
-    return True
-
-
 def is_valid_dir(dirname: str) -> Union[bool, str]:
     """
     ### Is Valid Dir
@@ -222,30 +185,6 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
         return 'directory names cannot contain these characters <:"/\\|?*\\0\\t\\r\\n>'
 
     # All checks passed
-    return True
-
-
-def is_valid_dir_legacy(dirname: str) -> Union[bool, str]:
-    """
-    ### Is Valid Dirpath
-    Validates directory name. Returns `True` if valid, Returns `str` if invalid.
-    This `str` contains the reason for dir being invalid.
-
-    #### ARGS:
-    - `dirname`: the path to validate
-    """
-    if not dirname:
-        return "path must not be empty."
-
-    if platform == "win32":
-        chars = r'\/:?*<>"|'
-    else:  # Linux & MacOS
-        chars = r"/:<>"
-
-    # Check for illegal chars
-    if contains_chars(dirname, chars):
-        return "avoid these characters: %s" % chars
-
     return True
 
 
