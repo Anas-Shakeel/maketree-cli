@@ -1,13 +1,44 @@
 """Contains Helper code to keep core logic clean. (things that don't fit anywhere, fit here)"""
 
+import re
 from sys import platform
 from os import makedirs
 from os.path import exists, splitext
 from pathlib import Path
-from typing import List, Dict, Union, Iterable, Optional
+from typing import List, Dict, Set, Union, Iterable, Optional
 from maketree.terminal_colors import colored
 from maketree.console import Console
 from datetime import datetime
+
+
+# FILENAME REGEX (Valid filename regex)
+FILENAME_REGEX = re.compile(r'^(?!^(?:\.{1,2})$)[^<>:"/\\|?*\0\t\r\n]+$')
+
+# Special words (Windows doesn't allow files or dirs with these names)
+RESERVED_WINDOWS_NAMES: Set[str] = {
+    "CON",
+    "PRN",
+    "AUX",
+    "NUL",
+    "COM1",
+    "COM2",
+    "COM3",
+    "COM4",
+    "COM5",
+    "COM6",
+    "COM7",
+    "COM8",
+    "COM9",
+    "LPT1",
+    "LPT2",
+    "LPT3",
+    "LPT4",
+    "LPT5",
+    "LPT6",
+    "LPT7",
+    "LPT8",
+    "LPT9",
+}
 
 
 def get_os_name():
@@ -66,6 +97,50 @@ def is_valid_extension(extension: str) -> bool:
 
 
 def is_valid_file(filename: str) -> Union[bool, str]:
+    """
+    ### Is Valid File
+    Validates filename. Returns `True` if valid, Returns `str` if invalid.
+    This `str` is the cause of filename invalidation.
+
+    #### ARGS:
+    - `filename`: name of the file
+
+    ##### This Method:
+    - Disallows empty filenames
+    - Disallows `.` and `..` as filenames
+    - Disallows filenames starting with `..`
+    - Disallows Windows Reserved Words like `CON`, `AUX` etc.
+    - Disallows Special characters like `<:"/\\|?*\\0\\t\\r\\n>`
+
+    This methods is cross-platform. (more or less)
+    """
+    # Disallow empty filenames
+    if not filename:
+        return "file name must not be empty"
+
+    # Disallow `.` and `..`
+    if filename in {".", ".."}:
+        return "file name must not be '.' or '..'"
+
+    # Disallow filenames starting with and `..`
+    if filename.startswith(".."):
+        return "file name must not start with '..'"
+
+    # Disallow Windows-Reserved names
+    if platform == "win32":
+        for name in RESERVED_WINDOWS_NAMES:
+            if name in filename.upper():
+                return "%s is reserved on Windows" % name
+
+    # Validate characters (disallow special chars)
+    if not bool(re.match(FILENAME_REGEX, filename.strip())):
+        return 'contains invalid characters: avoid these <:"/\\|?*\\0\\t\\r\\n>'
+
+    # All checks passed
+    return True
+
+
+def is_valid_file_legacy(filename: str) -> Union[bool, str]:
     """
     ### Is Valid File
     Validates filename. Returns `True` if valid, Returns `str` if invalid.
