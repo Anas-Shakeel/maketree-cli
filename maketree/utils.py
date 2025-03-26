@@ -10,10 +10,6 @@ from maketree.console import Console
 from datetime import datetime
 
 
-# win32, linux, darwin
-OS: str = platform
-
-
 def get_os_name():
     """Returns the OS Name `Windows`, `Linux` or `MacOS`"""
     if platform == "win32":
@@ -60,7 +56,7 @@ def is_valid_extension(extension: str) -> bool:
     if extension.count(".") > 1:
         return False
 
-    if OS == "win32" and contains_chars(extension, r' \/:*?"<>|'):
+    if platform == "win32" and contains_chars(extension, r' \/:*?"<>|'):
         return False
 
     elif "/" in extension:  # Linux & MacOS
@@ -91,7 +87,7 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     if not root:
         return "invalid file name"
 
-    if OS == "win32":
+    if platform == "win32":
         chars = r'\/:?*<>"|'
     else:  # Linux & MacOS
         chars = r"/:<>"
@@ -118,7 +114,7 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     if not dirname:
         return "path must not be empty."
 
-    if OS == "win32":
+    if platform == "win32":
         chars = r'\/:?*<>"|'
     else:  # Linux & MacOS
         chars = r"/:<>"
@@ -159,7 +155,7 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
     d = Path(dirpath)
     if d.drive:
         root_parts = d.parts[1:]
-    elif OS == "linux" and (d.parts and d.parts[0] == "/"):
+    elif platform == "linux" and (d.parts and d.parts[0] == "/"):
         root_parts = d.parts[1:]
     else:
         root_parts = d.parts
@@ -167,7 +163,7 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
     if sum(len(part) for part in root_parts) > max_length:
         return f"maximum length of path can be {max_length}"
 
-    if OS == "win32":
+    if platform == "win32":
         chars = r'\/:?*<>"|'
     else:  # Linux & MacOS
         chars = r"/:<>"
