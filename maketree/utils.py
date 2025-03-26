@@ -119,30 +119,30 @@ def is_valid_file(filename: str) -> Union[bool, str]:
 
     # Disallow empty filenames
     if not filename:
-        return "file name must not be empty"
+        return "file names cannot be empty or all spaces."
 
     # Disallow `.` and `..`
     if filename in {".", ".."}:
-        return "file name must not be '.' or '..'"
+        return "file names cannot be '.' or '..'"
 
-    # Disallow filenames starting with and `..`
+    # Disallow filenames starting with `..`
     if filename.startswith(".."):
-        return "file name must not start with '..'"
+        return "file names cannot start with '..'"
 
     # Disallow Trailing dot in Windows
     if platform == "win32" and filename.endswith("."):
-        return "file name cannot end with '.' on Windows"
+        return "file names cannot end with '.' on Windows"
 
     # Disallow Windows-Reserved names
     if platform == "win32":
         # Extract filename (not extension)
         name_ = filename.rsplit(".", maxsplit=1)[0]
         if name_.upper() in RESERVED_WINDOWS_NAMES:
-            return "%s is reserved on Windows" % name_
+            return "the name '%s' is reserved on Windows" % name_
 
     # Validate characters (disallow special chars)
     if not re.match(FILENAME_REGEX, filename.strip()):
-        return 'contains invalid characters: avoid these <:"/\\|?*\\0\\t\\r\\n>'
+        return 'file names cannot contain these characters <:"/\\|?*\\0\\t\\r\\n>'
 
     # All checks passed
     return True
@@ -198,28 +198,28 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
 
     # Disallow empty dirname
     if not dirname:
-        return "directory name cannot be empty"
+        return "directory names cannot be empty or all spaces."
 
     # Disallow `.` and `..`
     if dirname in {".", ".."}:
-        return "directory name cannot be '.' or '..'"
+        return "directory names cannot be '.' or '..'"
 
-    # Disallow dirname starting with and `..`
+    # Disallow dirname starting with `..`
     if dirname.startswith(".."):
-        return "directory name cannot start with '..'"
+        return "directory names cannot start with '..'"
 
     # Disallow Trailing dot in Windows
     if platform == "win32" and dirname.endswith("."):
-        return "directory name cannot end with '.' on Windows"
+        return "directory names cannot end with '.' on Windows"
 
     # Disallow Windows-Reserved names
     if platform == "win32":
         if dirname.upper() in RESERVED_WINDOWS_NAMES:
-            return "%s is reserved on Windows" % dirname
+            return "the name '%s' is reserved on Windows" % dirname
 
     # Validate characters (disallow special chars)
     if not bool(re.match(DIRNAME_REGEX, dirname.strip())):
-        return 'contains invalid characters: avoid these <:"/\\|?*\\0\\t\\r\\n>'
+        return 'directory names cannot contain these characters <:"/\\|?*\\0\\t\\r\\n>'
 
     # All checks passed
     return True
