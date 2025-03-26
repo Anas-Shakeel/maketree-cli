@@ -14,6 +14,16 @@ from datetime import datetime
 OS: str = platform
 
 
+def get_os_name():
+    """Returns the OS Name `Windows`, `Linux` or `MacOS`"""
+    if platform == "win32":
+        return "Windows"
+    elif platform == "darwin":
+        return "MacOS"
+    else:
+        return "Linux"
+
+
 def get_nonexisting_paths(paths: List[str]) -> List[str]:
     """Returns a list of non-existing paths from `paths` list."""
     return list(filter(lambda p: not exists(p), paths))
