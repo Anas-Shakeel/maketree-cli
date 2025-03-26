@@ -11,8 +11,9 @@ from maketree.console import Console
 from datetime import datetime
 
 
-# FILENAME REGEX (Valid filename regex)
+# File/Dir Name REGEXes
 FILENAME_REGEX = re.compile(r'^(?!^(?:\.{1,2})$)[^<>:"/\\|?*\0\t\r\n]+$')
+DIRNAME_REGEX = re.compile(r'^[^<>:"/\\|?*\0\t\r\n]+$')
 
 # Special words (Windows doesn't allow files or dirs with these names)
 RESERVED_WINDOWS_NAMES: Set[str] = {
@@ -178,6 +179,46 @@ def is_valid_file_legacy(filename: str) -> Union[bool, str]:
 
 
 def is_valid_dir(dirname: str) -> Union[bool, str]:
+    """
+    ### Is Valid Dir
+    Validates directory name. Returns `True` if valid, Returns `str` if invalid.
+    This `str` contains the reason for dir being invalid.
+
+    #### ARGS:
+    - `dirname`: name of directory
+    """
+    dirname = dirname.strip()
+
+    # Disallow empty dirname
+    if not dirname:
+        return "directory name cannot be empty"
+
+    # Disallow `.` and `..`
+    if dirname in {".", ".."}:
+        return "directory name cannot be '.' or '..'"
+
+    # Disallow dirname starting with and `..`
+    if dirname.startswith(".."):
+        return "directory name cannot start with '..'"
+
+    # Disallow Trailing dot in Windows
+    if platform == "win32" and dirname.endswith("."):
+        return "directory name cannot end with '.' on Windows"
+
+    # Disallow Windows-Reserved names
+    if platform == "win32":
+        if dirname.upper() in RESERVED_WINDOWS_NAMES:
+            return "%s is reserved on Windows" % dirname
+
+    # Validate characters (disallow special chars)
+    if not bool(re.match(DIRNAME_REGEX, dirname.strip())):
+        return 'contains invalid characters: avoid these <:"/\\|?*\\0\\t\\r\\n>'
+
+    # All checks passed
+    return True
+
+
+def is_valid_dir_legacy(dirname: str) -> Union[bool, str]:
     """
     ### Is Valid Dirpath
     Validates directory name. Returns `True` if valid, Returns `str` if invalid.
