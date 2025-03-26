@@ -3,7 +3,7 @@
 import re
 from sys import platform
 from os import makedirs
-from os.path import exists, splitext
+from os.path import exists, splitext, join
 from pathlib import Path
 from typing import List, Dict, Set, Union, Iterable, Optional
 from maketree.terminal_colors import colored
@@ -13,7 +13,7 @@ from datetime import datetime
 
 # File/Dir Name REGEXes
 FILENAME_REGEX = re.compile(r'^(?!^(?:\.{1,2})$)[^<>:"/\\|?*\0\t\r\n]+$')
-DIRNAME_REGEX = re.compile(r'^[^<>:"/\\|?*\0\t\r\n]+$')
+DIRNAME_REGEX = re.compile(r'^[^<>:"|?*\0\t\r\n]+$')
 
 # Special words (Windows doesn't allow files or dirs with these names)
 RESERVED_WINDOWS_NAMES: Set[str] = {
@@ -188,7 +188,7 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     return True
 
 
-def is_valid_dirpath(dirpath: str, max_length: int = 250):
+def is_valid_dirpath(dirpath: str):
     """
     ### Is Valid Dirpath
     Validates directory path. Returns `True` if valid, Returns `str` if invalid.
@@ -196,43 +196,39 @@ def is_valid_dirpath(dirpath: str, max_length: int = 250):
 
     #### ARGS:
     - `dirpath`: the path to validate
-    - `max_length`: maximum length to allow (length of the whole path, except drive)
-
-    #### Example:
-    ```
-    >> is_valid_dirpath("path\\to\\folder")
-    True
-    >> is_valid_dirpath("path\\to\\*Illegal*folder")
-    'Illegal characters are not allowed: \\/:?*<>|"'
-    ```
-
-    Raises `AssertionError` if:
-    - `dirpath` is not a string
-
-    Used for longer dir paths.
     """
+    dirpath = dirpath.strip()
+
     if not dirpath:
-        return "path must not be empty."
+        return "path cannot be empty or all spaces."
+
+    if dirpath in {".", ".."}:  # No Further checking needed
+        return True
 
     d = Path(dirpath)
-    if d.drive:
+    if d.drive:  # Remove drive letter
         root_parts = d.parts[1:]
     elif platform == "linux" and (d.parts and d.parts[0] == "/"):
+        # Remove '/'
         root_parts = d.parts[1:]
     else:
         root_parts = d.parts
 
-    if sum(len(part) for part in root_parts) > max_length:
-        return f"maximum length of path can be {max_length}"
+    # Disallow dirpath to be more than 255 chars
+    if len(dirpath) > 255:  # Maxlength including slashes
+        return "path cannot contain more than 255 characters"
 
+    # Windows specific checks
     if platform == "win32":
-        chars = r'\/:?*<>"|'
-    else:  # Linux & MacOS
-        chars = r"/:<>"
+        # Disallow Windows-Reserved names
+        for part in root_parts:
+            if part.upper() in RESERVED_WINDOWS_NAMES:
+                return "the name '%s' is reserved on Windows" % part
 
-    # Check for illegal chars
-    if _contains(root_parts, chars):
-        return "avoid these characters: %s" % chars
+        # Validate characters (disallow special chars)
+        root_parts_str = join(*root_parts).strip() if root_parts else ""
+        if not re.match(DIRNAME_REGEX, root_parts_str):
+            return 'path cannot contain these characters <:"|?*\\0\\t\\r\\n>'
 
     return True
 
