@@ -129,6 +129,10 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     if filename.startswith(".."):
         return "file name must not start with '..'"
 
+    # Disallow Trailing dot in Windows
+    if platform == "win32" and filename.endswith("."):
+        return "file name cannot end with '.' on Windows"
+
     # Disallow Windows-Reserved names
     if platform == "win32":
         # Extract filename (not extension)
