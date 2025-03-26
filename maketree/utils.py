@@ -171,17 +171,22 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     if dirname.startswith(".."):
         return "directory names cannot start with '..'"
 
-    # Disallow Trailing dot in Windows
-    if platform == "win32" and dirname.endswith("."):
-        return "directory names cannot end with '.' on Windows"
-
-    # Disallow Windows-Reserved names
+    # Windows specific checks
     if platform == "win32":
+        # Disallow Trailing dot in Windows
+        if dirname.endswith("."):
+            return "directory names cannot end with '.' on Windows"
+
+        # Disallow Windows-Reserved names
         if dirname.upper() in RESERVED_WINDOWS_NAMES:
             return "the name '%s' is reserved on Windows" % dirname
 
+    # Disallow '/' or '\'
+    if contains_chars(dirname, "/\\"):
+        return "directory names cannot contain '/' or '\\'"
+
     # Validate characters (disallow special chars)
-    if not bool(re.match(DIRNAME_REGEX, dirname.strip())):
+    if not re.match(DIRNAME_REGEX, dirname.strip()):
         return 'directory names cannot contain these characters <:"/\\|?*\\0\\t\\r\\n>'
 
     # All checks passed
