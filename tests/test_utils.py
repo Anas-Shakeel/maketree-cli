@@ -16,6 +16,7 @@ from maketree.utils import (
     get_nonexisting_paths,
     incremented_filename,
     now,
+    create_dir,
 )
 
 
@@ -269,4 +270,24 @@ def test_incremented_filename():
         assert incremented_filename("file.txt") == "file_1.txt"
     finally:
         # Remove TEMP dir
+        shutil.rmtree(TEMP_DIR)
+
+
+def test_create_dir():
+    # Create temp dir
+    try:
+        os.mkdir(TEMP_DIR)
+    except FileExistsError:
+        pass
+
+    # Test
+    try:
+        # Create a directory
+        dir_path = "%s/test/directory" % TEMP_DIR
+        assert create_dir(dir_path) is True
+
+        # Created?
+        assert os.path.exists(dir_path) is True
+
+    finally:
         shutil.rmtree(TEMP_DIR)
