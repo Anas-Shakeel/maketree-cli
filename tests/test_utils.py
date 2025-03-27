@@ -14,6 +14,7 @@ from maketree.utils import (
     is_valid_extension,
     get_existing_paths,
     get_nonexisting_paths,
+    incremented_filename,
     now,
 )
 
@@ -247,3 +248,22 @@ def test_contains():
 def test_now():
     format_ = "%d %B %Y %I:%M %p"
     assert now(format_) == datetime.now().strftime(format_)
+
+
+def test_incremented_filename():
+    # Make a TEMP dir
+    try:
+        os.mkdir(TEMP_DIR)
+    except FileExistsError:
+        pass
+
+    # Test
+    try:
+        # Create temp file
+        with open("file.txt", "w") as f:
+            pass
+
+        assert incremented_filename("file.txt") == "file_1.txt"
+    finally:
+        # Remove TEMP dir
+        shutil.rmtree(TEMP_DIR)
