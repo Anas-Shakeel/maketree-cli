@@ -3,6 +3,7 @@
 import os
 import shutil
 from sys import platform
+from datetime import datetime
 
 from maketree.utils import (
     is_valid_dirpath,
@@ -13,6 +14,7 @@ from maketree.utils import (
     is_valid_extension,
     get_existing_paths,
     get_nonexisting_paths,
+    now,
 )
 
 
@@ -86,7 +88,7 @@ def test_is_valid_file():
         ".config",
         ".con.txt",
         "con1.txt",
-        "..somefile.txt", # valid because no slash /
+        "..somefile.txt",  # valid because no slash /
     ]
     for filename in valid_filenames:
         assert is_valid_file(filename) == True
@@ -99,7 +101,7 @@ def test_is_valid_file():
         "file/name.txt",
         "file\\name.txt",
         "folder/subfolder/name.txt",
-        "../somefile.txt", # invalid because of slash /
+        "../somefile.txt",  # invalid because of slash /
         "file\tname.txt",
         "file\0name.txt",
         "",
@@ -240,3 +242,8 @@ def test_contains():
     assert _contains(parts, "2td") == True
     assert _contains(parts, "_:") == False  # None of parts contain _ or :
     assert _contains(parts, "xz") == False  # None of parts contain x or z
+
+
+def test_now():
+    format_ = "%d %B %Y %I:%M %p"
+    assert now(format_) == datetime.now().strftime(format_)
