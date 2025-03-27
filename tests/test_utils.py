@@ -31,7 +31,10 @@ paths = [
 
 
 def test_get_non_existing_paths():
-    os.mkdir(TEMP_DIR)
+    try:
+        os.mkdir(TEMP_DIR)
+    except FileExistsError:
+        pass
 
     # Create first-two files in paths list.
     for p in paths[:2]:
