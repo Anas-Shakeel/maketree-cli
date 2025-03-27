@@ -123,14 +123,48 @@ def test_is_valid_file():
 
 
 def test_is_valid_dir():
-    assert is_valid_dir("folder") == True
-    assert is_valid_dir("folder123") == True
-    assert is_valid_dir("folder 134") == True
-    assert is_valid_dir(".folder") == True
-    assert is_valid_dir(".") == True
+    # Valid in Windows, Mac, Linux
+    valid_dirnames = [
+        "valid_directory",
+        "another_valid-dir_123",
+        "My documents - 2025",
+        "UPPERCASE DIR",
+        "dir with spaces",
+        "report_v1.2-final",
+        ".config",
+    ]
+    for dirname in valid_dirnames:
+        assert is_valid_dir(dirname) == True
 
-    assert isinstance(is_valid_dir("fol/der"), str)  # Only single part names are valid
-    assert isinstance(is_valid_dir("fol:der"), str)
+    # Invalid dirnames
+    invalid_dirnames = [
+        "invalid|dir",
+        "invalid:dir?",
+        "<bad-dir>",
+        "dir/name",
+        "dir\\name",
+        "..somedir",
+        "dir\tname",
+        "dir\0name",
+        "",
+        " ",
+        ".",
+        "..",
+    ]
+    for dirname in invalid_dirnames:
+        assert isinstance(is_valid_dir(dirname), str)
+
+    # Windows Reserved Words
+    if platform == "win32":
+        reserved_words = [
+            "CON",
+            "Aux",
+            "nuL",
+            "COM7",
+            "LpT4",
+        ]
+        for word in reserved_words:
+            assert isinstance(is_valid_dir(word), str)
 
 
 def test_contains_chars():
