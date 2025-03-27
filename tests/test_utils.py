@@ -86,6 +86,7 @@ def test_is_valid_file():
         ".config",
         ".con.txt",
         "con1.txt",
+        "..somefile.txt", # valid because no slash /
     ]
     for filename in valid_filenames:
         assert is_valid_file(filename) == True
@@ -98,7 +99,7 @@ def test_is_valid_file():
         "file/name.txt",
         "file\\name.txt",
         "folder/subfolder/name.txt",
-        "..somefile.txt",
+        "../somefile.txt", # invalid because of slash /
         "file\tname.txt",
         "file\0name.txt",
         "",

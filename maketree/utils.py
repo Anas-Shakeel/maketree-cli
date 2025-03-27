@@ -125,10 +125,6 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     if filename in {".", ".."}:
         return "file names cannot be '.' or '..'"
 
-    # Disallow filenames starting with `..`
-    if filename.startswith(".."):
-        return "file names cannot start with '..'"
-
     # Disallow Trailing dot in Windows
     if platform == "win32" and filename.endswith("."):
         return "file names cannot end with '.' on Windows"
