@@ -17,6 +17,7 @@ from maketree.utils import (
     incremented_filename,
     now,
     create_dir,
+    get_os_name,
 )
 
 
@@ -291,3 +292,14 @@ def test_create_dir():
 
     finally:
         shutil.rmtree(TEMP_DIR)
+
+
+def test_get_os_name():
+    if platform == "win32":
+        os_name = "Windows"
+    elif platform == "darwin":
+        os_name = "MacOS"
+    else:
+        os_name = "Linux"
+
+    assert get_os_name() == os_name
