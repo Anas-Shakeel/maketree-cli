@@ -2,6 +2,7 @@
 
 import os
 import shutil
+from sys import platform
 
 from maketree.utils import (
     is_valid_dirpath,
@@ -74,17 +75,51 @@ def test_is_valid_extension():
 
 
 def test_is_valid_file():
-    assert is_valid_file("file.extension") == True
-    assert is_valid_file("filewithoutextension") == True
-    assert is_valid_file(".gitignore") == True
-    assert is_valid_file("file 123.txt") == True
-    assert is_valid_file(".") == True
+    # Valid in Windows, Mac, Linux
+    valid_filenames = [
+        "valid_file.txt",
+        "another_valid-file_123.log",
+        "My document 2025.txt",
+        "UPPERCASE FILE",
+        "file with spaces.txt",
+        "report_v1.2-final.log",
+        ".config",
+        ".con.txt",
+        "con1.txt",
+    ]
+    for filename in valid_filenames:
+        assert is_valid_file(filename) == True
 
-    assert isinstance(is_valid_file(""), str)
-    assert isinstance(is_valid_file("fi:le.txt"), str)
+    # Invalid filenames
+    invalid_filenames = [
+        "invalid|file.txt",
+        "invalid:file?.txt",
+        "<badfile>.txt",
+        "file/name.txt",
+        "file\\name.txt",
+        "folder/subfolder/name.txt",
+        "..somefile.txt",
+        "file\tname.txt",
+        "file\0name.txt",
+        "",
+        " ",
+        ".",
+        "..",
+    ]
+    for filename in invalid_filenames:
+        assert isinstance(is_valid_file(filename), str)
 
-    # Only single part names are valid
-    assert isinstance(is_valid_file("fi/le.txt"), str)
+    # Windows Reserved Words
+    if platform == "win32":
+        reserved_words = [
+            "CON.txt",
+            "Aux.txt",
+            "nuL",
+            "COM7",
+            "LpT4.file",
+        ]
+        for word in reserved_words:
+            assert isinstance(is_valid_file(word), str)
 
 
 def test_is_valid_dir():
