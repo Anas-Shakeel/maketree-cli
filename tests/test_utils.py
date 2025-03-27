@@ -182,15 +182,48 @@ def test_contains_chars():
 
 
 def test_is_valid_dirpath():
-    assert is_valid_dirpath(".") == True
-    assert is_valid_dirpath("folder") == True
-    assert is_valid_dirpath("./folder/") == True
-    assert is_valid_dirpath("folder/folder1/folder2/folder3/folder/4") == True
-    assert is_valid_dirpath("./folder/") == True
+    # Valid in Windows, Mac, Linux
+    valid_dirs = [
+        "valid_directory",
+        "My documents - 2025",
+        "UPPERCASE DIR",
+        "report/v1.2/final",
+        ".config",
+        ".",
+        "../..",
+        "..somedir",
+        "./folder/",
+        "folder/folder1/folder2/folder3/folder/4",
+        "G:\\folder\\folder1\\folder2",
+        "/folder/folder1/folder2/",
+    ]
+    for dir_ in valid_dirs:
+        assert is_valid_dirpath(dir_) == True
 
-    assert isinstance(is_valid_dirpath("./fol<der>/"), str)
-    assert isinstance(is_valid_dirpath("./fol<der/fo>lder/"), str)
-    assert isinstance(is_valid_dirpath(""), str)
+    # Invalid dirs
+    invalid_dirs = [
+        "invalid|dir",
+        "invalid:dir?",
+        "bad/<dir>",
+        "dir\tname",
+        "dir\0name",
+        "",
+        " ",
+    ]
+    for dir_ in invalid_dirs:
+        assert isinstance(is_valid_dirpath(dir_), str)
+
+    # Windows Reserved Words
+    if platform == "win32":
+        reserved_words = [
+            "CON",
+            "Aux",
+            "nuL",
+            "COM7",
+            "LpT4",
+        ]
+        for word in reserved_words:
+            assert isinstance(is_valid_dirpath(word), str)
 
 
 def test_contains():
