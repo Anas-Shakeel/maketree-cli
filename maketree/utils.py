@@ -163,10 +163,6 @@ def is_valid_dir(dirname: str) -> Union[bool, str]:
     if dirname in {".", ".."}:
         return "directory names cannot be '.' or '..'"
 
-    # Disallow dirname starting with `..`
-    if dirname.startswith(".."):
-        return "directory names cannot start with '..'"
-
     # Windows specific checks
     if platform == "win32":
         # Disallow Trailing dot in Windows

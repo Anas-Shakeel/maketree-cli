@@ -133,6 +133,7 @@ def test_is_valid_dir():
         "dir with spaces",
         "report_v1.2-final",
         ".config",
+        "..somedir",
     ]
     for dirname in valid_dirnames:
         assert is_valid_dir(dirname) == True
@@ -144,7 +145,7 @@ def test_is_valid_dir():
         "<bad-dir>",
         "dir/name",
         "dir\\name",
-        "..somedir",
+        "../somedir",
         "dir\tname",
         "dir\0name",
         "",
