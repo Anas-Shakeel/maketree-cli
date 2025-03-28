@@ -254,11 +254,14 @@ def test_incremented_filename():
 
     # Test
     try:
+        filepath = "%s/file.txt" % TEMP_DIR
+        expected_filepath = os.path.join(TEMP_DIR, "file_1.txt")
+
         # Create temp file
-        with open("file.txt", "w") as f:
+        with open(filepath, "w") as f:
             pass
 
-        assert incremented_filename("file.txt") == "file_1.txt"
+        assert incremented_filename(filepath) == expected_filepath
     finally:
         # Remove TEMP dir
         shutil.rmtree(TEMP_DIR)
