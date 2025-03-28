@@ -195,21 +195,6 @@ def is_valid_dirpath(dirpath: str):
     return True
 
 
-def _contains(parts: Iterable[str], chars: str) -> bool:
-    """
-    ### Contains
-    Checks whether a string in `parts` contains a character from `chars`.
-    Returns `True` if it does, `False` if does not.
-
-    Used with `is_valid_dirpath` only.
-    """
-    for char in chars:
-        for part in parts:
-            if char in part:
-                return True
-    return False
-
-
 def contains_chars(string: str, chars: str) -> bool:
     """
     ### Contains
