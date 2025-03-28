@@ -194,7 +194,7 @@ def is_valid_dirpath(dirpath: str):
     #### ARGS:
     - `dirpath`: the path to validate
     """
-    dirpath = dirpath.strip()
+    dirpath = str(dirpath)
 
     if not dirpath:
         return "path cannot be empty or all spaces."
