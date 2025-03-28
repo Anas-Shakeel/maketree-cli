@@ -56,7 +56,6 @@ def main():
             # Exists?
             if extract_tree_path.exists():
                 filename = Extractor.extract(extract_tree_path, console=console)
-                # console.success()
                 print(
                     console.color_substrs(
                         f"Tree has been extracted into '{filename}'",
@@ -64,8 +63,7 @@ def main():
                         "light_green",
                     )
                 )
-
-                return
+                sys.exit(0)
             else:
                 # Show error and quit
                 console.error(
