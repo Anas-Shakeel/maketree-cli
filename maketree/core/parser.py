@@ -33,6 +33,11 @@ class Parser:
             if not line:
                 continue
 
+            # Comment?
+            if line.lstrip().startswith("//"):
+                print("COMMENT: ", line)
+                continue
+
             # Indentation level of current entry
             indent_level: int = (len(line) - len(line.lstrip())) // 4
 
