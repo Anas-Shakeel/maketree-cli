@@ -210,21 +210,24 @@ def test_is_valid_dirpath():
     for dir_ in valid_dirs:
         assert is_valid_dirpath(dir_) == True
 
-    # Invalid dirs
-    invalid_dirs = [
-        "invalid|dir",
-        "invalid:dir?",
-        "bad/<dir>",
-        "dir\tname",
-        "dir\0name",
-        "",
-        " ",
-    ]
-    for dir_ in invalid_dirs:
-        assert isinstance(is_valid_dirpath(dir_), str)
+    # TODO: Add Linux/Mac specific tests for invalid directories
 
-    # Windows Reserved Words
+    # Windows Specific Tests
     if platform == "win32":
+        # Invalid dirs
+        invalid_dirs = [
+            "invalid|dir",
+            "invalid:dir?",
+            "bad/<dir>",
+            "dir\tname",
+            "dir\0name",
+            "",
+            " ",
+        ]
+        for dir_ in invalid_dirs:
+            assert isinstance(is_valid_dirpath(dir_), str)
+
+        # Reserved Words
         reserved_words = [
             "CON",
             "Aux",
