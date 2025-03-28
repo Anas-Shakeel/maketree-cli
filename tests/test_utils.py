@@ -11,7 +11,6 @@ from maketree.utils import (
     contains_chars,
     is_valid_dir,
     is_valid_file,
-    is_valid_extension,
     get_existing_paths,
     get_nonexisting_paths,
     incremented_filename,
@@ -68,18 +67,6 @@ def test_get_existing_paths():
     finally:
         # Remove TEMP_DIR
         shutil.rmtree(TEMP_DIR)
-
-
-def test_is_valid_extension():
-    assert is_valid_extension(".txt") == True
-    assert is_valid_extension(".gitignore") == True
-    assert is_valid_extension(".c") == True
-    assert is_valid_extension(".🔥") == True
-
-    assert is_valid_extension("file.txt") == False  # Accepts only extensions
-    assert is_valid_extension("...txt") == False  # Too many periods
-    assert is_valid_extension(".t/xt") == False  # slash
-    assert is_valid_extension("txt") == False  # must start with period
 
 
 def test_is_valid_file():

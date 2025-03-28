@@ -62,41 +62,6 @@ def get_existing_paths(paths: List[str]) -> List[str]:
     return list(filter(lambda p: exists(p), paths))
 
 
-def is_valid_extension(extension: str) -> bool:
-    """
-    ### Is Valid Extension
-    Returns `True` if extension is valid, `False` otherwise.
-    `extension` must contain a period `.`
-
-    An extension is valid if it follows below criteria:
-    - extension must be non-empty (excluding period `.`)
-    - extension must have a period `.`
-    - extension must not contain symbols, whitespaces
-        - `\\/:*?"<>|` are illegal on Windows
-        - `/:` are illegal on Mac
-        - `/` are illegal on Linux
-    """
-    if not extension:
-        return False
-
-    if len(extension) < 2:
-        return False
-
-    if not extension.startswith("."):
-        return False
-
-    if extension.count(".") > 1:
-        return False
-
-    if platform == "win32" and contains_chars(extension, r' \/:*?"<>|'):
-        return False
-
-    elif "/" in extension:  # Linux & MacOS
-        return False
-
-    return True
-
-
 def is_valid_file(filename: str) -> Union[bool, str]:
     """
     ### Is Valid File
