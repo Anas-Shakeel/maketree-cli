@@ -35,7 +35,6 @@ class Parser:
 
             # Comment?
             if line.lstrip().startswith("//"):
-                print("COMMENT: ", line)
                 continue
 
             # Indentation level of current entry
