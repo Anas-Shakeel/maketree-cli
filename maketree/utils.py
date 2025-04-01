@@ -74,7 +74,6 @@ def is_valid_file(filename: str) -> Union[bool, str]:
     ##### This Method:
     - Disallows empty filenames
     - Disallows `.` and `..` as filenames
-    - Disallows filenames starting with `..`
     - Disallows Windows Reserved Words like `CON`, `AUX` etc.
     - Disallows Special characters like `<:"/\\|?*\\0\\t\\r\\n>`
 
