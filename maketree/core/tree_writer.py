@@ -1,6 +1,6 @@
 """Contains logic for writing extracted tree structure into a .tree file"""
 
-import os
+from os.path import join, exists
 from maketree.console import Console
 from maketree.utils import incremented_filename
 
@@ -16,6 +16,7 @@ class TreeWriter:
         cls,
         extracted_tree: List[Tuple[str, str, int]],
         console: Console,
+        save_to: str = ".",
     ) -> str:
         """
         ### Write
@@ -23,11 +24,14 @@ class TreeWriter:
 
         #### Args:
         - `extracted_tree`: the tree list extracted by `Extractor` class
+        - `save_to`: where to save the final `.tree` file
         """
+        assert exists(save_to), "'%s' does not exists" % save_to
+
         spacer = "    "  # Spacer for indentation
 
         # Non-Existent filename (Folder-Name or Timestamp)
-        filename = extracted_tree[0][1]
+        filename = join(save_to, extracted_tree[0][1])
         filename = incremented_filename("%s.tree" % filename)
 
         console.verbose("Creating %s..." % filename)
