@@ -52,10 +52,3 @@ class Validator:
             f"{spacer}{underline}\n"
             f"{reason_label} {error_message}"
         )
-
-        # return (
-        #     f"At line {item['line']}\n"
-        #     f"{spacer}{item['name']}{slash}\n"
-        #     f"{spacer}{'^' * len(item['name'])}\n"
-        #     f"Reason: {error_message}"
-        # )
