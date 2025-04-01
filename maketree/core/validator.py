@@ -1,7 +1,12 @@
-import sys
 from maketree.utils import is_valid_dir, is_valid_file
 from maketree.console import Console
 from typing import Dict, List, Any, Optional
+
+
+class ValidationError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+        self.args = args
 
 
 class Validator:
@@ -15,15 +20,13 @@ class Validator:
                 valid = is_valid_dir(item["name"])
                 # Print Error and Exit
                 if valid is not True:
-                    print(cls.format_error(item, error_message=valid))
-                    sys.exit(1)
+                    raise ValidationError(cls.format_error(item, error_message=valid))
 
             else:  # File
                 valid = is_valid_file(item["name"])
                 # Print Error and Exit
                 if valid is not True:
-                    print(cls.format_error(item, error_message=valid))
-                    sys.exit(1)
+                    raise ValidationError(cls.format_error(item, error_message=valid))
 
             # Recurse (if directory)
             if item.get("children"):
