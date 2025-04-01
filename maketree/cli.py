@@ -20,7 +20,7 @@ from typing import List, Dict
 
 
 PROGRAM = "maketree"
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 
 def main():

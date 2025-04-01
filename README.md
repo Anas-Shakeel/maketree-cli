@@ -171,7 +171,7 @@ options:
   -nC, --no-confirm     don't ask for confirmation
   -v, --verbose         enable verbose mode
 
-Maketree 1.1.0
+Maketree 1.2.0
 ```
 
 ### Creating a Directory Structure
