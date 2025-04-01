@@ -6,6 +6,7 @@ from argparse import ArgumentParser
 from maketree.core.parser import Parser, ParseError
 from maketree.core.validator import Validator
 from maketree.core.extractor import Extractor
+from maketree.core.tree_writer import TreeWriter
 from maketree.core.tree_builder import TreeBuilder
 from maketree.core.normalizer import Normalizer
 from maketree.console import Console
@@ -49,30 +50,31 @@ def main():
             )
         )
 
+    # Source .tree not provided?
     if not sourcefile:
-        # Extract tree into a file
-        if EXTRACT_TREE:
-            extract_tree_path = Path(EXTRACT_TREE)
-            # Exists?
-            if extract_tree_path.exists():
-                filename = Extractor.extract(extract_tree_path, console=console)
-                print(
-                    console.color_substrs(
-                        f"Tree has been extracted into '{filename}'",
-                        [filename],
-                        "light_green",
-                    )
-                )
-                sys.exit(0)
-            else:
-                # Show error and quit
-                console.error(
-                    f"the following path does not exist: '{extract_tree_path}'"
-                )
-
-        else:
-            # Show error and quit
+        if not EXTRACT_TREE:
             console.error("the following argument is required: src")
+
+        # Convert path into Path object
+        extract_tree_path = Path(EXTRACT_TREE)
+
+        if not extract_tree_path.exists():
+            console.error(f"the following path does not exist: '{extract_tree_path}'")
+
+        # Extract tree into a file
+        extracted_tree = Extractor.extract(extract_tree_path, console=console)
+
+        # Pass the tree into FileWriter
+        filename = TreeWriter.write(extracted_tree, console)
+
+        print(
+            console.color_substrs(
+                f"Tree has been extracted into '{filename}'",
+                [filename],
+                "light_green",
+            )
+        )
+        sys.exit(0)
 
     # Convert to Path object
     sourcefile = Path(sourcefile)
