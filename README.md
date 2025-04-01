@@ -51,7 +51,7 @@ Create project structures effortlessly with a single command.
     -   [How do I uninstall Maketree?](#how-do-i-uninstall-maketree)
 -   [Contributing](#contributing)
 
-## Overview
+<h2 id="overview">📖 Overview</h2>
 
 Maketree is a powerful CLI tool that generates **directories** and **files** based on a predefined structure. Instead of manually creating folders and files, just define your structure and let **Maketree** handle the rest.
 
@@ -59,13 +59,13 @@ Maketree is a powerful CLI tool that generates **directories** and **files** bas
   <img src="https://raw.githubusercontent.com/Anas-Shakeel/maketree-cli/main/assets/demo.gif" alt="demo.gif"/>
 </p>
 
-## Why Maketree?
+<h2 id="why-maketree">🤔 Why Maketree?</h2>
 
 -   **Saves Time**: No more manually creating directories and files.
 -   **Consistency**: Maintain a standard project structure across all your projects.
 -   **Easy to Use**: Define a structure in plain text and generate it instantly.
 
-## Features:
+<h2 id="features">🚀 Features:</h2>
 
 -   **Supports nested directory structures**
 -   **Automatically creates missing parent directories**
@@ -76,9 +76,9 @@ Maketree is a powerful CLI tool that generates **directories** and **files** bas
 -   **Lightweight, fast, and has zero dependencies**
 -   **Simple and user-friendly CLI**
 
-## Installation:
+<h2 id="installation">📦 Installation:</h2>
 
-### Install via **pip**:
+<h3 id="install-via-pip">Install via **pip**:</h3>
 
 `Maketree` is available on PyPI. **(Recommended if you're a python developer and have python already installed on your system)**
 
@@ -90,7 +90,7 @@ pip install maketree
 
 `python>=3.8` must be installed on your system.
 
-### Install from **Source**:
+<h3 id="install-from-source">Install from **Source**:</h3>
 
 If you are installing from source, you will need `python>=3.8`.
 
@@ -100,7 +100,7 @@ cd maketree-cli
 pip install .
 ```
 
-### Download **Binaries**: _(No Python Required)_
+<h3 id="download-binaries-no-python-required">Download **Binaries**: _(No Python Required)_</h3>
 
 Maketree provides standalone binaries for **Linux**, **macOS**, and **Windows**. **(Recommended if you don't want to install Python.)**
 
@@ -114,7 +114,7 @@ Maketree provides standalone binaries for **Linux**, **macOS**, and **Windows**.
     maketree -h
     ```
 
-## Quickstart:
+<h2 id="quickstart">⚡ Quickstart:</h2>
 
 Define your project structure in a `.tree` file:
 
@@ -139,11 +139,11 @@ maketree structure.tree
 
 This will instantly generate the entire structure in your current directory.
 
-## Usage
+<h2 id="usage">⚙️ Usage</h2>
 
 You can `maketree` from any location in your terminal. **(If installed via `pip` or if moved the executable to a directory recognized by system's `PATH`)**
 
-### Display Help
+<h3 id="display-help">Display Help</h3>
 
 ```sh
 maketree -h
@@ -174,11 +174,11 @@ options:
 Maketree 1.2.0
 ```
 
-### Creating a Directory Structure
+<h3 id="creating-a-directory-structure">Creating a Directory Structure</h3>
 
 **Maketree** reads `.tree` file that defines the folder and file structure and then creates the corresponding structure on your filesystem.
 
-#### Define the Structure
+<h4 id="define-the-structure">Define the Structure</h4>
 
 Create a file named `myapp.tree`:
 
@@ -218,7 +218,7 @@ Output:
 
 By default, maketree creates the structure in the current directory.
 
-### Syntax for Writing a `.tree` File
+<h3 id="syntax-for-writing-a-tree-file">Syntax for Writing a `.tree` File</h3>
 
 To ensure correctness, follow these simple points:
 
@@ -258,7 +258,7 @@ Output: (After confirming)
 3 directories and 8 files have been created.
 ```
 
-### Specifying a Destination Folder
+<h3 id="specifying-a-destination-folder">Specifying a Destination Folder</h3>
 
 You can specify a destination folder instead of creating the structure in the current directory.
 
@@ -284,7 +284,7 @@ Output:
 3 directories and 8 files have been created.
 ```
 
-### Handling Existing Files
+<h3 id="handling-existing-files">Handling Existing Files</h3>
 
 If you run `maketree` again in the same directory without deleting files, you’ll see an error:
 
@@ -300,7 +300,7 @@ Error: Found 8 existing files, cannot proceed. (try --skip or --overwrite)
 
 By default, `maketree` does not **overwrite** or **skip** existing files.
 
-#### Overwrite Existing Files
+<h4 id="overwrite-existing-files">Overwrite Existing Files</h4>
 
 Use the `--overwrite` or `-o` flag to overwrite existing files:
 
@@ -314,7 +314,7 @@ Output:
 0 directories and 8 files have been created.
 ```
 
-#### Skip Existing Files
+<h4 id="skip-existing-files">Skip Existing Files</h4>
 
 Use the `--skip` or `-s` flag to keep existing files but create missing ones:
 
@@ -328,7 +328,7 @@ Output: (After deleting 3 files)
 0 directories and 3 files have been created.
 ```
 
-### Extracting the Structure
+<h3 id="extracting-the-structure">Extracting the Structure</h3>
 
 You can also extract an already created project structure using `-et` or `--extract-tree` flag following the directory path of structure:
 
@@ -363,7 +363,7 @@ myapp/
 
 Now this `.tree` file can be used whenever you want to create a similar project structure.
 
-### Preview the Structure
+<h3 id="preview-the-structure">Preview the Structure</h3>
 
 Use `--graphical` or `-g` to visualize the `myapp.tree` file:
 
@@ -390,7 +390,7 @@ Output:
 
 It is also shown before you create a structure for confirmation.
 
-### Avoid Confirming:
+<h3 id="avoid-confirming">Avoid Confirming:</h3>
 
 By default, `maketree` confirms before creating the structure. But this can sometimes be anoyying. Use `--no-confirm` or `-nC` flag to create the structure without confirming. _(Notice the C is capital in `-nC`)_
 
@@ -398,7 +398,7 @@ By default, `maketree` confirms before creating the structure. But this can some
 maketree myapp.tree myapp --no-confirm
 ```
 
-### Avoid Color Output:
+<h3 id="avoid-color-output">Avoid Color Output:</h3>
 
 By default, `maketree` uses [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) to color the output.
 
@@ -434,7 +434,7 @@ maketree myapp.tree myapp/ --no-color
 
 This will disable colors and you'll see normal text again.
 
-### Summary
+<h3 id="summary">Summary</h3>
 
 | Feature           | Command Example                 |
 | ----------------- | ------------------------------- |
@@ -447,9 +447,9 @@ This will disable colors and you'll see normal text again.
 | Avoid Confirm     | `maketree myapp.tree myapp -nC` |
 | Avoid Colors      | `maketree myapp.tree myapp -nc` |
 
-## Compatibility
+<h2 id="compatibility">🖥️ Compatibility</h2>
 
-### OS Support
+<h3 id="os-support">OS Support</h3>
 
 Maketree is compatible with the following operating systems:
 
@@ -459,7 +459,7 @@ Maketree is compatible with the following operating systems:
 | macOS   | ✅ Supported  |
 | Windows | ✅ Supported  |
 
-### Python Version Support
+<h3 id="python-version-support">Python Version Support</h3>
 
 Maketree works with **Python 3.8 and later**, ensuring compatibility with the latest Python releases.
 
@@ -472,21 +472,21 @@ Maketree works with **Python 3.8 and later**, ensuring compatibility with the la
 | 3.12           | ✅ Supported          |
 | 3.13           | ✅ Supported (Latest) |
 
-## FAQ
+<h2 id="faq">❓ FAQ</h2>
 
-#### What is Maketree?
+<h4 id="what-is-maketree">What is Maketree?</h4>
 
 **Maketree** is a command-line tool that helps developers quickly generate a predefined folder and file structures for your projects. It eliminates the need to manually create directories and files, allowing developers to start coding right away with a well-organized project structure.
 
-#### Do I have to be a Software Developer to use Maketree?
+<h4 id="do-i-have-to-be-a-software-developer-to-use-maketree">Do I have to be a Software Developer to use Maketree?</h4>
 
 No, you can be anyone. You can be a lawyer, student, or heck even Yavascript programmer.
 
-#### Why should I use Maketree?
+<h4 id="why-should-i-use-maketree">Why should I use Maketree?</h4>
 
 If you frequently create CLI applications, Maketree saves you time by setting up a standardized project structure instantly. It follows best practices and helps you maintain consistency across different projects.
 
-#### How do I install Maketree?
+<h4 id="how-do-i-install-maketree">How do I install Maketree?</h4>
 
 You can install **Maketree** via pip. _(for python developers)_
 
@@ -496,7 +496,7 @@ pip install maketree
 
 Or download the executable for your OS from [Releases page](https://github.com/anas-shakeel/maketree-cli/releases/latest/).
 
-#### How do I use Maketree to generate a project structure?
+<h4 id="how-do-i-use-maketree-to-generate-a-project-structure">How do I use Maketree to generate a project structure?</h4>
 
 Simply create a file like `anything.tree` and define your project structure in it:
 
@@ -517,7 +517,7 @@ maketree anything.tree
 
 This will create the files and folders you specified in `anything.tree` file.
 
-#### What should I do if I find a bug?
+<h4 id="what-should-i-do-if-i-find-a-bug">What should I do if I find a bug?</h4>
 
 If you encounter a bug, please [open an issue](https://github.com/Anas-Shakeel/maketree-cli/issues) on GitHub with details about the problem. Be sure to include:
 
@@ -526,7 +526,7 @@ If you encounter a bug, please [open an issue](https://github.com/Anas-Shakeel/m
 -   Expected vs. actual behavior
 -   Any error messages you received
 
-#### How do I uninstall Maketree?
+<h4 id="how-do-i-uninstall-maketree">How do I uninstall Maketree?</h4>
 
 To uninstall **Maketree** (installed via `pip`), Run:
 
@@ -534,6 +534,6 @@ To uninstall **Maketree** (installed via `pip`), Run:
 pip uninstall maketree
 ```
 
-## Contributing
+<h2 id="contributing">🤝 Contributing</h2>
 
 Contributions to **Maketree** are welcome and highly appreciated. However, before you jump right into it, i would like you to review [Contribution Guidelines](https://github.com/anas-shakeel/maketree-cli/blob/main/CONTRIBUTING.md) to make sure you have a smooth experience contributing to **Maketree**.
