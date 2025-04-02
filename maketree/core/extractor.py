@@ -1,5 +1,6 @@
 """Extracts a directory tree and writes into a file. (preferably .tree)"""
 
+import os
 from pathlib import Path
 from maketree.console import Console
 from maketree.utils import incremented_filename, now
@@ -34,9 +35,11 @@ class Extractor:
         tree: List[Tuple[str, str, int]] = []
 
         # Write stuff to stuff.stuff :)
-        for current, _, files in path.walk():
-            depth = len(current.relative_to(path).parts)
-            dir_name = current.name or str(current)
+        for root, _, files in os.walk(path):
+            current_path = Path(root)
+
+            depth = len(current_path.relative_to(path).parts)
+            dir_name = current_path.name or root
 
             console.verbose("found %s/..." % dir_name)
 
