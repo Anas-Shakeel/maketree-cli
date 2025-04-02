@@ -39,14 +39,20 @@ def test_extract():
     # Extract the tree
     tree = Extractor.extract(Path(TEMP_DIR), console=console)
 
-    assert tree[0][0] == "directory"
-    assert tree[0][1] == TEMP_DIR
+    # Sort the tree (Windows and Linux traverse differently)
+    sorted_tree = sorted(tree[1:], key=lambda x: x[1])  # Sort by name
 
-    assert tree[1][0] == "file"
-    assert tree[1][1] == "file1.txt"
-    assert tree[1][2] == 1
+    # Check Types (directory or file)
+    assert sorted_tree[0][0] == "file"
+    assert sorted_tree[-1][0] == "directory"
 
-    assert tree[2][1] == "file2.csv"
-    assert tree[3][1] == "file3.json"
+    # Check Indentations
+    assert sorted_tree[0][2] == 1
+    assert sorted_tree[1][2] == 1
+
+    # Check Names
+    assert sorted_tree[0][1] == "file1.txt"
+    assert sorted_tree[1][1] == "file2.csv"
+    assert sorted_tree[2][1] == "file3.json"
 
     rmtree(TEMP_DIR)
